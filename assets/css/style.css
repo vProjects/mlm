@@ -14,6 +14,7 @@
 /* CSS Document */
 
 /* home page css */
+
 body{
 	background-image:url(../../img/bg.png);
 	background-repeat:repeat;
@@ -31,8 +32,11 @@ body{
 	border-radius: 5px 5px 0px 0px;
 	-webkit-border-radius: 5px 5px 0px 0px;
 }
+#google_translate_element {
+    margin-right: 20px;
+}
 .logo{
-	margin-top:15px;
+	margin-top:20px;
 }
 .search_box{
 	margin-top: 10px;
@@ -67,6 +71,9 @@ body{
 }
 .navbar .nav > li:hover{	
 }
+.navbar .nav > li > a:focus, .navbar .nav > li > a:hover{
+	color:#fff;
+}
 .navbar .nav > .active > a, .navbar .nav > .active > a:hover, .navbar .nav > .active > a:focus {
 	color: #fff;
 }
@@ -85,6 +92,14 @@ body{
 .navbar .nav > li > a:hover{
 	color:#fff;
 	background-color:#000;
+}
+#success_msg{
+	display:none;
+	height:20px;
+}
+#warning_msg{
+	display:none;
+	height:20px;
 }
 .left_container{
 	padding-right:15px;
@@ -125,6 +140,7 @@ body{
 .left_container_product{
 	margin:15px 0;
 	font-size: 15px;
+	min-height: 80px;
 }
 .left_container_product a{
 	text-decoration:none;
@@ -138,8 +154,6 @@ body{
 	margin-bottom:40px;
 }
 .slider{
-	background-color:#0692F9;
-	height:330px;
 	margin-bottom:15px;
 }
 .right_container_object{
@@ -149,10 +163,20 @@ body{
 	padding-bottom:20px;
 	transition:ease-in 0.3s all 0s;
 }
+.right_container_object a {
+	color:#000;
+	text-decoration:none;
+}
 .right_container_object:hover{
 	border: 1px solid #e3e3e3;
 	box-shadow: 3px 3px 7px #363636;
 	transition:ease-in 0.3s all 0s;
+}
+.old_price{
+	margin-left:10px;
+	text-decoration:line-through;
+	color:#F40B0B;
+	font-weight:300;
 }
 .footer{
 	background-color:#1F1F1F;
@@ -178,6 +202,7 @@ body{
     list-style: none outside none;
     margin-top: 5px;
     padding: 5px 0;
+	line-height:20px;
 }
 .footer_part ul li a{
 	color:#888888;
@@ -186,7 +211,7 @@ body{
 	color:#da4f49;
 }
 .footer_text_part{
-	padding:40px 0 15px;
+	padding:5px 0 15px;
 	background-color:#1F1F1F;
 	text-align:center;
 	color:#ABABAB;
@@ -196,7 +221,10 @@ body{
 	margin-bottom:5px;
 	color: #DA4F49;
 }
-
+#product_image{
+	height:150px;
+	width:100%;
+}
 
 /* sign up page css*/
 .page_heading{
@@ -216,6 +244,9 @@ body{
 	text-align:left;
 	padding-left:15px;
 }
+.membership_product_img{
+	height:120px;
+}
 /* login page css */
 .login_page{
 	padding-left:10px;
@@ -232,17 +263,19 @@ body{
 }
 .product_name{
 	font-weight: bold;
-	color: red;
+	color: #000;
+}
+.product_img{
+	width:100%;
 }
 .product_price_tag{
 	margin:15px 0;
 }
 .product_price_text{
-	font-size:22px;
+	font-size:20px;
 	text-transform:uppercase;
 	color:#000;
-	margin-right:40px;
-	color: red;
+	margin-right:37px;
 }
 .product_price{
 	padding:10px 15px;
@@ -296,6 +329,13 @@ body{
 	text-transform:uppercase;
 	margin-left:15px;
 }
+.update_button{
+	background-image:url(../../img/update.png);
+	background-repeat:no-repeat;
+}
+.cart_image{
+	width:25%;
+}
 /*checkout css*/
 .checkout_accordian{
 	background: #F8F8F8;
@@ -331,5 +371,139 @@ body{
 .checkout_table tbody tr{
 	border-bottom:1px solid #ddd;
 }
+#new_address_form, #new_address_form_delivery{
+	display:none;
+}
 
+/* Ewallet page css */
+.table_caption{
+	font-size:18px;
+	font-weight:bold;
+	margin-bottom: 10px;
+	color: red;
+	text-transform: uppercase;
+}
+.total_amount{
+	color:#ff0010;
+	font-weight:bold;
+}
+.withdraw_btn{
+	text-align:center;
+}
 
+/* my_tree page css */
+.img-mlm {
+   padding:0px; 
+}
+.mlm-chlid {
+    border-left: 5px solid #000;
+}
+.mlm-button {
+    margin-right: 31px;
+    margin-top: 10px;
+}
+.mlm_icon_img{
+	margin-bottom:15px;
+}
+.mlm_child_info{
+	margin:10px 15px 10px 0;
+	padding-left:10px;
+}
+.child_name{
+	text-transform:capitalize;
+	margin-top: 4px;
+}
+.no_found_text{
+	color:#ff0000;
+	font-size:16px;
+	text-transform:uppercase;
+	font-weight:bold;
+	margin-top: 46px;
+	margin-left: 10px;
+}
+.function_result{
+	color: #FF0066;
+    font-size: 16px;
+	font-weight:bold;
+	text-transform:capitalize;
+}
+.cookiealert {
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 20%;
+    min-width: 360px;
+    display: none;
+}
+.socialIcons {
+    width: 40px;
+    height: 40px;
+    margin-right: 5px;
+}
+.footerLinks{
+    line-height: 4px;
+}
+.prductSmallImage {
+    display: block;
+    cursor: pointer;
+}
+.price_before {
+   text-decoration: line-through;
+   font-size: 15px;
+   font-weight: bold; 
+   margin-right: 92px;
+}
+.price_before_digit {
+   text-decoration: line-through;
+   font-size: 15px;
+   font-weight: bold;  
+}
+.members_price {
+   color: #00CC33;
+}
+.guest_price {
+    font-size: 15px;
+    font-weight: bold;
+    margin-right: 70px;
+}
+.addthis_share_button{
+    padding-bottom: 10px;
+}
+
+.checkoutForm2 {
+    pointer-events: none;
+    opacity: 0.5;
+    background: #CCC;
+}
+.checkoutForm3 {
+    pointer-events: none;
+    opacity: 0.5;
+    background: #CCC;
+}
+.checkoutForm4 {
+    pointer-events: none;
+    opacity: 0.5;
+    background: #CCC;
+}
+/* MailChimp Form Embed Code - Slim - 08/17/2011 */
+#mc_embed_signup form {display:block; position:relative; text-align:left; padding:0px 0 0px 3%}
+#mc_embed_signup h2 {font-weight:bold; padding:0; margin:15px 0; font-size:1.4em;}
+#mc_embed_signup input {border:1px solid #999; -webkit-appearance:none;}
+#mc_embed_signup input[type=checkbox]{-webkit-appearance:checkbox;}
+#mc_embed_signup input[type=radio]{-webkit-appearance:radio;}
+#mc_embed_signup input:focus {border-color:#333;}
+#mc_embed_signup .button {clear:both; background-color: #aaa; border: 0 none; border-radius:4px; color: #FFFFFF; cursor: pointer; display: inline-block; font-size:15px; font-weight: bold; height: 32px; line-height: 32px; margin: 0 5px 10px 0; padding:0; text-align: center; text-decoration: none; vertical-align: top; white-space: nowrap; width: auto;}
+#mc_embed_signup .button:hover {background-color:#777;}
+#mc_embed_signup .small-meta {font-size: 11px;}
+#mc_embed_signup .nowrap {white-space:nowrap;}     
+#mc_embed_signup .clear {clear:none; display:inline;}
+
+#mc_embed_signup label {display:block; font-size:16px; padding-bottom:10px; font-weight:bold;}
+#mc_embed_signup input.email {display:block; padding:8px 0; margin:0 4% 10px 0; text-indent:5px; width:58%; min-width:130px;}
+#mc_embed_signup input.button {display:block; width:35%; margin:0 0 10px 0; min-width:90px;}
+
+#mc_embed_signup div#mce-responses {float:left; top:-1.4em; padding:0em .5em 0em .5em; overflow:hidden; width:90%;margin: 0 5%; clear: both;}
+#mc_embed_signup div.response {margin:1em 0; padding:1em .5em .5em 0; font-weight:bold; float:left; top:-1.5em; z-index:1; width:80%;}
+#mc_embed_signup #mce-error-response {display:none;}
+#mc_embed_signup #mce-success-response {color:#529214; display:none;}
+#mc_embed_signup label.error {display:block; float:none; width:auto; margin-left:1.05em; text-align:left; padding:.5em 0;}

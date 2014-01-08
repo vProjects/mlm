@@ -1,0 +1,6 @@
+[26-Nov-2013 23:41:02] PHP Fatal error:  Call to a member function query() on a non-object in /home/galacrik/public_html/vyrazu/running-projects/mlm/v-admin/v-includes/library/library.DAL.php on line 26
+[26-Nov-2013 23:41:26] PHP Fatal error:  Call to a member function query() on a non-object in /home/galacrik/public_html/vyrazu/running-projects/mlm/v-admin/v-includes/library/library.DAL.php on line 26
+[26-Nov-2013 23:41:43] PHP Fatal error:  Call to a member function query() on a non-object in /home/galacrik/public_html/vyrazu/running-projects/mlm/v-admin/v-includes/library/library.DAL.php on line 26
+[27-Nov-2013 11:45:56] PHP Fatal error:  Call to a member function execute() on a non-object in /home/galacrik/public_html/vyrazu/running-projects/mlm/v-admin/v-includes/library/library.DAL.php on line 27
+[02-Dec-2013 07:53:28] PHP Fatal error:  Call to a member function execute() on a non-object in /home/galacrik/public_html/vyrazu/running-projects/mlm/v-admin/v-includes/library/library.DAL.php on line 99
+[02-Dec-2013 07:54:06] PHP Fatal error:  Call to a member function execute() on a non-object in /home/galacrik/public_html/vyrazu/running-projects/mlm/v-admin/v-includes/library/library.DAL.php on line 99
