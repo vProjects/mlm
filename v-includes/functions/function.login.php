@@ -30,8 +30,9 @@
               }
 			  else if($result[0] == 'failed' && $result[1] == 'invalid'){
 				  // sets the session variable for invalid member
-                  $_SESSION['login_error'] = 'Your Are Not A Valid Member Now';
-                  header('Location: ../../login.php');
+                  $_SESSION['memberId'] = $result[2];
+				  $_SESSION['invalid_member'] = 'Invalid Member';
+                  header('Location: ../../invalidMember.php');
 			  }
         }
     

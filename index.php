@@ -4,6 +4,9 @@
     if(!isset($_SESSION['memberId'])){
         $_SESSION['guestId'] = 'guest';
     }
+	if(isset($_SESSION['invalid_member'])){
+        header("Location: invalidMember.php");
+    }
 	// include header section
 	include 'v-templates/header.php';
 	$category = "Posebna ponudba";

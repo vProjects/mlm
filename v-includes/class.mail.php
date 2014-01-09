@@ -9,7 +9,7 @@ class Mail{
 		/*
          * top domail url for activation.php
          */ 		
-        private $link = 'http://www.vyrazu.com/running-projects/mlm/';
+        private $link = 'http://www.mojlife.com/';
          
 		/*
 		*  The mail id of the system

@@ -623,6 +623,15 @@
 			$price = $this->manage_data->getValue_where("purchase_log","*","order_id",$order_id);
 			return array($cate,$quantity,$price[0]['price']);
 		 }
+		 
+		 /*method for checking member validiation field
+		 	Auth Dipanjan
+		 */
+		 function getInvalidConditionsOfMember($membership_id){
+			 //getting member details
+			$member = $this->manage_data->getValue_where("member_table","*","membership_id",$membership_id);
+			return array($member[0]['membership_validiation'],$member[0]['membership_activation']);
+		 }
 		
 	}
 	

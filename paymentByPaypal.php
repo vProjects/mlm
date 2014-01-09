@@ -29,6 +29,15 @@
 		
 		//sending the mail
 		$mail = $mailsent->confirmationOfOrderPaypal($result,$order_id,$product_list[0],$product_list[1],$product_list[2]);
+		//checking for invalid conditions
+		if(isset($_SESSION['invalid_member']) && substr($membership_id,0,6) == 'member')
+		{
+			$coditions = $manageMoney->getInvalidConditionsOfMember($membership_id);
+			if($coditions[0] == 1 && $coditions[1] == 1)
+			{
+				unset($_SESSION['invalid_member']);
+			}
+		}
 
 
  	header("Location: thanku.php");  

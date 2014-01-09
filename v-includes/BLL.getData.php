@@ -454,7 +454,7 @@
 			  }
 			  else
 			  {
-				  return array('failed','invalid');
+				  return array('failed','invalid',$passwordRow[0]['membership_id']);
 			  }
             }
 			
@@ -1559,6 +1559,17 @@
 			{
 				echo '';
 			}
+		}
+		
+		/*
+		 method for getting invalid conditions
+		 Auth: Dipanjan
+		*/
+		function getInvalidConditions($membership_id){
+			//getting footer links from database
+			$member = $this->manage_content->getValue_where("member_table","*","membership_id",$membership_id);
+			//fetching the membership invalid conditions
+			return array($member[0]['membership_validiation'],$member[0]['membership_activation']);
 		}
 	
 	}

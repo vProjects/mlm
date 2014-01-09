@@ -42,13 +42,13 @@
         <!--- rightcontainer starts here --->
         <div class="span9">
         	<div class="row-fluid">
-        		<h2 class="page_heading">Register račun</h2>
-                <p>Če že imate račun pri nas, prosimo, prijavite na strani za prijavo.</p>
+        		<h2 class="page_heading">Registracija računa</h2>
+                <p>Če že imate račun pri nas se prosimo prijavite na strani za prijavo.</p>
             </div>
             <div class="row-fluid">
             	<form action="v-includes/functions/function.signup.php" id="signup_form" 
                 class="form-horizontal" method="post">
-                	<h4 class="form_caption">Osebne podatke</h4>
+                	<h4 class="form_caption">Osebni podatki</h4>
                     <div class="control-group">
                         <label class="control-label" id="form_label">Ime:</label>
                         <div class="controls">
@@ -77,7 +77,7 @@
                         </div>
                     </div>
                      <div class="control-group">
-                        <label class="control-label" id="form_label">Višji serijski ne:</label>
+                        <label class="control-label" id="form_label">ID številka priporočitelja:</label>
                         <div class="controls">
                         	<input type="text" placeholder="" name="Senior_id" id="v_senior_id">
                             <div id="err_senior_id"></div>
@@ -86,14 +86,14 @@
                     
                     <h4 class="form_caption">Vaš naslov</h4>
                     <div class="control-group">
-                        <label class="control-label" id="form_label">Naslov vrstico1:</label>
+                        <label class="control-label" id="form_label">Naslov 1:</label>
                         <div class="controls">
                         	<input type="text" placeholder="" name="address1" id="v_address">
                             <div id="err_address"></div>
                         </div>
                     </div>
                     <div class="control-group">
-                        <label class="control-label" id="form_label">Naslov vrstico2:</label>
+                        <label class="control-label" id="form_label">Naslov 2:</label>
                         <div class="controls">
                         	<input type="text" placeholder="" name="address2">
                         </div>
@@ -123,9 +123,9 @@
                         </div>
                     </div>
                     
-                    <h4 class="form_caption">Članstvo izdelka</h4>
+                    <h4 class="form_caption">Članstvo</h4>
                     <div class="control-group">
-                        <label class="control-label" id="form_label">Izberite kateri koli izdelek:</label>
+                        <label class="control-label" id="form_label">Izberite članstvo:</label>
                         <div class="controls">
                         	<?php $getMemberProduct = $manageContent->getMembershipProduct(); ?>
                             </div>
@@ -150,7 +150,7 @@
                     <div class="control-group">
                         <div class="controls">
                         	<label class="checkbox">
-                            	<input type="checkbox" name="terms" id="v_term"> Prebral sem in se strinjajo, da je<a href="#">Pravilnik o zasebnosti</a>
+                            	<input type="checkbox" name="terms" id="v_term"> Prebral sem in se strinjam s pogoji poslovanja.
                                 <div id="err_term"></div>
                             </label>
                             <input type="button" class="btn btn-inverse btn-large" id="btn_submit" 
