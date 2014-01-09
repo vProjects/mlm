@@ -115,11 +115,18 @@ $(document).ready(function(){
         if(payment_method == 'paypal'){
             document.getElementById('paypalform').style.display = "block";
             document.getElementById('checkoutdone').style.display = "none";
+            document.getElementById('checkoutdonebymyaccount').style.display = "none";
         }
         else if(payment_method == 'account'){
             document.getElementById('paypalform').style.display = "none";
+            document.getElementById('checkoutdonebymyaccount').style.display = "none";
             document.getElementById('checkoutdone').style.display = "block";            
         }
+        else if(payment_method == 'myaccount'){
+            document.getElementById('paypalform').style.display = "none";
+            document.getElementById('checkoutdone').style.display = "none"; 
+            document.getElementById('checkoutdonebymyaccount').style.display = "block";           
+		}
         
         var paymentData = 'paymentMethod='+payment_method+'&orderCom='+order_comments+'&refData=paymentOption&u=unk';
 
@@ -170,6 +177,33 @@ $(document).ready(function(){
         }});
 
     });
+    
+    $('#checkoutdonebymyaccount').click(function(){
+        var allProducts = checkAllProduct();
+        allProducts = allProducts.substr(0,allProducts.length-1);
+        var memberId = document.getElementById('userid').innerHTML;
+        var totalPrice = document.getElementById('totalProductprice').innerHTML;
+        
+        payment = 'totalPrice='+totalPrice+'&memberid='+memberId+'&allProducts='+allProducts+'&refData=mypayment&u=unk';
+        
+         $.ajax({
+            type: "POST",
+            url:"v-includes/functions/function.saveData.php",
+            data: payment,
+            beforeSend:function(){
+                // this is where we append a loading image
+                $('').html('');
+              },
+            success:function(result){
+                $("").html('');
+                 window.location = 'paymentByAccount.php';
+                 deleteAllCookies();
+                return false;
+        }});
+
+    });    
+    
+    
     
     
     // to change the slider images in the product details page

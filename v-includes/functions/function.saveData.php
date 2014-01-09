@@ -60,10 +60,15 @@
 				  $mailSent = $mail->invoiceOfOrder($insertPaymentConfirm[2],$_SESSION['uniqueid'],$insertPaymentConfirm[3],$insertPaymentConfirm[4],$insertPaymentConfirm[5]);
 			  }
             
-			unset($_SESSION['uniqueid']);
+			  unset($_SESSION['uniqueid']);
               break;
+		
+		case 'mypayment':
+		
+		
+			break;
             
-        default:
+       	default:
             
             break;
     }

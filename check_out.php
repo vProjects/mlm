@@ -179,6 +179,19 @@
                               <input type="radio" name="wayofpayment" id="" value="paypal">
                                Plačajte s PayPal
                             </label>
+                            <?php 
+                            if(isset($_SESSION['memberId'])){
+                            	print_r
+                            	(' <label class="radio check_out_radio">
+		                              <input type="radio" name="wayofpayment" id="" value="myaccount">
+		                               Plačajte s by my MLM balance
+		                            </label>
+		                         ');
+                              
+							}
+							else {}
+							?>
+
                             <label>Napišite komentar o načinih plačila in željenih načinih plačila.</label>
     						<textarea rows="6" cols="30" class="input-block-level" id="order_comments"></textarea>
                             <label class="radio check_out_radio pull-left">
@@ -228,6 +241,8 @@
                           <div id="userid" style="display: none;"><?php if(isset($_SESSION['memberId'])){ echo $_SESSION['memberId']; } else echo $_SESSION['guestId']; ?></div>
                           <div id="totalProductprice" style="display: none;"><?php echo $getProductAmount ?></div>
                           <input type="button" href="" class="btn btn-inverse pull-right" id="checkoutdone" value="Confirm">
+                          <input type="button" href="" class="btn btn-inverse pull-right" id="checkoutdonebymyaccount" value="Confirm">
+                          
                           
                           <div class="clearfix"></div>
                       </form> 

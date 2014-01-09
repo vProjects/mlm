@@ -4,7 +4,7 @@
 		protected $db_conn;
 		public $db_name = "mlm" ;
 		public $db_username = "root" ;
-		public $db_password = "root" ;
+		public $db_password = "" ;
 		public $db_host = "localhost" ;
 		
 		function connect(){
