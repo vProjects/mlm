@@ -123,9 +123,34 @@ $(document).ready(function(){
             document.getElementById('checkoutdone').style.display = "block";            
         }
         else if(payment_method == 'myaccount'){
-            document.getElementById('paypalform').style.display = "none";
-            document.getElementById('checkoutdone').style.display = "none"; 
-            document.getElementById('checkoutdonebymyaccount').style.display = "block";           
+			
+			 var memberId = document.getElementById('userid').innerHTML;
+			 var totalPrice = document.getElementById('totalProductprice').innerHTML;
+			 data = 'totalPrice='+totalPrice+'&memberid='+memberId+'&refData=memberbalancecheck&u=unk';
+			
+			$.ajax({
+            type: "POST",
+            url:"v-includes/functions/function.saveData.php",
+            data: data,
+            beforeSend:function(){
+                // this is where we append a loading image
+                $('').html('');
+              },
+            success:function(result){
+				if(result == '1')
+				{
+					document.getElementById('paypalform').style.display = "none";
+					document.getElementById('checkoutdone').style.display = "none"; 
+					document.getElementById('checkoutdonebymyaccount').style.display = "block";
+				}
+				else
+				{
+					alert("You Have Not Sufficient Balance");
+					return false;
+				}
+                $("").html('');
+                return false;
+        		}});          
 		}
         
         var paymentData = 'paymentMethod='+payment_method+'&orderCom='+order_comments+'&refData=paymentOption&u=unk';

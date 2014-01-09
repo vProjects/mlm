@@ -617,6 +617,82 @@
 			 return array($result,$insertPaymentConf,$email_id,$payment_method[0]['price'],$cate,$quantity);
          }
 		 
+		 /*method which inserts users final value at the time of payment through myaccount
+		 	Auth Dipanjan
+		 */
+         function insertPaymentConfirmAccount($orderId,$totalPrice,$memberid,$allProducts){
+             $insertPaymentConf = $this->manage_content->insertPayment($orderId,$totalPrice,$memberid,$allProducts);
+             //taking all the cookie value to an array 
+            $arr = $GLOBALS['_COOKIE'];
+			//getting payment method from purchase log table
+			$payment_method = $this->manage_content->
+			getValue_where("purchase_log","*","order_id",$orderId);
+			//getting date of insertion
+			$date = $this->getDate();
+            //loop for extracting the cookies value
+            foreach($arr as $key=>$value)
+            {
+                //checking the key name for identifying the cookies
+                if(substr($key,0,10) == 'no_product')
+                {
+                    //separating the product id from cookies name
+                    $product_id = substr($key,10);
+					//setting payment status
+					$payment_status = 0;
+					//inserting values in payment status
+					$result = $this->manage_content->insertPurchaseInfo($orderId,$product_id,$value,$date,$payment_method[0]['payment_method'],$payment_status);
+                }
+				//checking for coupon name
+				else if($value == 'mojolife')
+				{
+					//getting the coupon id
+					$coupon_id = substr($key,0,11);
+					//setting payment status
+					$payment_status = 0;
+					//inserting values in payment status
+					$result = $this->manage_content->insertPurchaseInfo($orderId,$coupon_id,1,$date,$payment_method[0]['payment_method'],$payment_status);
+				}
+            }
+			if($memberid == 'guest')
+			{
+				$email_id = $payment_method[0]['email_id'];
+			}
+			else
+			{
+				$member = $this->manage_content->getValue_where("member_table","*","membership_id",$memberid);
+				$email_id = $member[0]['email_id'];
+			}
+			//getting the product and quantity details
+			$all_products = $this->manage_content->getValue_where("purchase_info","*","order_id",$orderId);
+			//initialize parameter
+			$cate = "";
+			$quantity = "";
+			foreach($all_products as $all_product){
+				$val = $all_product['product_id'];
+				if(substr($val,0,1) == 'M')
+				{
+					$product = $this->manage_content->getValue_where("membership_product","*","product_id",$val);
+					$cate = $cate.$product[0]['product_name']."<br>";
+					
+				}
+				else if(substr($val,0,1) == 'C')
+				{
+					$product = $this->manage_content->getValue_where("coupon_table","*","coupon_id",$val);
+					
+					$cate = $cate.$product[0]['coupon_code']."<br>";
+				}
+				else
+				{
+					$product = $this->manage_content->getValue_where("product_table","*","product_id",$val);
+					$cate = $cate.$product[0]['product_name']."<br>";
+				}
+				$sl_no++;
+				//llisting the quantity of products
+				$quantity = $quantity.$all_product['quantity']."<br>";
+			}
+			 return array($result,$insertPaymentConf,$email_id,$payment_method[0]['price'],$cate,$quantity);
+         }
+		 
 		 /*method which inserts users final value at the time of payment through paypal
 		 	Auth Dipanjan
 		 */
@@ -883,7 +959,7 @@
 					//getting child member details from member table
 					$child_member = $this->manage_content->getValue_where("member_table","*","membership_id",$child_membership_id[0]['membership_id']);
 					//checking membership validiation of child members
-					if($child_member[0]['membership_validiation'] == 1)
+					if($child_member[0]['membership_validiation'] == 1 && $child_member[0]['membership_activation'] == 1)
 					{
 						$validiate = '';
 					}
@@ -1059,6 +1135,77 @@
 		}
 		
 		/*
+			inserting values to withdraw log table
+			Auth: Dipanjan
+		*/
+		function insertWithdrawValue($membership_id,$amount,$order_id){
+			$date = $this->getDate();
+			//inserting values
+			$insert = $this->manage_content->insertWithdrawalAmount($membership_id,$amount,0,$order_id,$date,0);
+		}
+		/*
+			getting net balence of member
+			Auth: Dipanjan
+		*/
+		function getNetAmount($membership_id){
+			//getting all transaction of a member
+			$transaction = $this->manage_content->
+			getValue_twoCoditions("money_transfer_log","*","membership_id",$membership_id,"frozen_money",0);
+			//initialize a variable for total amount calculation
+			$total_amount = 0;
+			$withdraw_amount = 0;
+			$withdraw_requested_amount = 0;
+			$purchase_by_account = 0;
+			$net_amount = 0;
+			if(count($transaction[0]) > 0)
+			{  
+				foreach($transaction as $transactions){
+					//checking for only debited amount
+					if(!empty($transactions['debit']))
+					{		
+						// total amount calculation
+						$total_amount = $total_amount + $transactions['debit'];
+					}
+				}
+				//getting the withdrawal amount from database
+				$withdraws = $this->manage_content->getValue_twoCoditions("withdraw_log","*","membership_id",$membership_id,"frozen_money",0);
+				//getting the amount withdrawal to that member
+				if(!empty($withdraws[0]))
+				{
+					foreach($withdraws as $withdrawal)
+					{
+						if(substr($withdrawal['withdraw_order_id'],0,8) == 'withdraw')
+						{
+							//checking for status of money transfer
+							if($withdrawal['status'] == 1)
+							{
+								$withdraw_amount = $withdraw_amount + $withdrawal['withdraw_amount'];
+							}
+							//checking for requested amount
+							else
+							{
+								$withdraw_requested_amount = $withdraw_requested_amount + $withdrawal['withdraw_amount'];
+							}
+						}
+						else
+						{
+							$purchase_by_account = $purchase_by_account + $withdrawal['withdraw_amount'];
+						}
+					}
+				}
+			}
+			if(($total_amount - ($withdraw_requested_amount + $purchase_by_account + $withdraw_amount)) > 20)
+			{
+				return ($total_amount - ($withdraw_requested_amount + $purchase_by_account + $withdraw_amount));
+			}
+			else
+			{
+				return 0;
+			}
+			
+		}
+		
+		/*
 			getting ewallet details of member from database table
 			Auth: Dipanjan
 		*/
@@ -1072,6 +1219,7 @@
 			$total_amount = 0;
 			$withdraw_amount = 0;
 			$withdraw_requested_amount = 0;
+			$purchase_by_account = 0;
 			$net_amount = 0;
 			if(count($transaction[0]) > 0)
 			{  
@@ -1136,15 +1284,22 @@
 				{
 					foreach($withdraws as $withdrawal)
 					{
-						//checking for status of money transfer
-						if($withdrawal['status'] == 1)
+						if(substr($withdrawal['withdraw_order_id'],0,8) == 'withdraw')
 						{
-							$withdraw_amount = $withdraw_amount + $withdrawal['withdraw_amount'];
+							//checking for status of money transfer
+							if($withdrawal['status'] == 1)
+							{
+								$withdraw_amount = $withdraw_amount + $withdrawal['withdraw_amount'];
+							}
+							//checking for requested amount
+							else
+							{
+								$withdraw_requested_amount = $withdraw_requested_amount + $withdrawal['withdraw_amount'];
+							}
 						}
-						//checking for requested amount
 						else
 						{
-							$withdraw_requested_amount = $withdraw_requested_amount + $withdrawal['withdraw_amount'];
+							$purchase_by_account = $purchase_by_account + $withdrawal['withdraw_amount'];
 						}
 					}
 				}
@@ -1181,16 +1336,26 @@
 						<td>  € '.$withdraw_requested_amount.'</td>
 					</tr>';
 			}
-			if(($total_amount - ($withdraw_requested_amount + $withdraw_amount)) != 0)
+			if(!empty($purchase_by_account))
+			{
+				echo '<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td class="total_amount"> Product Purchase Amount: </td>
+						<td>  € '.$purchase_by_account.'</td>
+					</tr>';
+			}
+			if(($total_amount - ($withdraw_requested_amount + $purchase_by_account + $withdraw_amount)) != 0)
 			{
 				echo '<tr>
 					<td></td>
 					<td></td>
 					<td></td>
 					<td class="total_amount"> Net Amount: </td>
-					<td>  € '.($total_amount - ($withdraw_requested_amount + $withdraw_amount)).'</td>
+					<td>  € '.($total_amount - ($withdraw_requested_amount + $purchase_by_account + $withdraw_amount)).'</td>
 				</tr>';
-				return ($total_amount - ($withdraw_requested_amount + $withdraw_amount));
+				return ($total_amount - ($withdraw_requested_amount + $purchase_by_account + $withdraw_amount));
 			}
 			else
 			{
@@ -1199,9 +1364,9 @@
 					<td></td>
 					<td></td>
 					<td class="total_amount"> Net Amount: </td>
-					<td>  € '.(int)($total_amount - ($withdraw_requested_amount + $withdraw_amount)).'</td>
+					<td>  € '.(int)($total_amount - ($withdraw_requested_amount + $purchase_by_account + $withdraw_amount)).'</td>
 				</tr>';
-				return (int)($total_amount - ($withdraw_requested_amount + $withdraw_amount));
+				return (int)($total_amount - ($withdraw_requested_amount + $purchase_by_account + $withdraw_amount));
 			}
 			
 		}

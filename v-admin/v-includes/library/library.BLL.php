@@ -564,7 +564,7 @@
 					//showing them in table
 					foreach($members as $member){
 						//checking for membership validiation
-						if($member['membership_validiation'] == 1)
+						if($member['membership_validiation'] == 1 && $member['membership_activation'] == 1)
 						{
 							$membership_validiation = 'Valid';
 						}
@@ -951,6 +951,75 @@
 												<span class="icon-pencil"></span>&nbsp;&nbsp;FINAL CONFIRM</button>
 											</a></td>
 										<td><a href="v-includes/functions/function.undoPaymentConfirmation.php?o_id='.$payment['order_id'].'">
+											<button class="btn btn-warning" type="button">
+												<span class="icon-pencil"></span>&nbsp;&nbsp;UNDO</button>
+											</a></td>';
+									}
+									else if($input_field == 'Undo')
+									{
+										echo '';
+									}
+									
+						echo	'</tr>
+							</tbody>';
+					}
+					else
+					{
+						echo '';
+					}
+				}
+			}
+			
+		}
+		
+		/*
+			getting payment request from database table for myaccount
+			Auth: Dipanjan
+		*/
+		function getDuePaymentsMyAccount($input_field){
+			//getting values from purchase info
+			$payments = $this->manageContent->getValueWhere_descending("purchase_log","*","payment_method","myaccount");
+			//checking for empty value
+			if(!empty($payments))
+			{
+				foreach($payments as $payment){
+					//getting purchase details
+					$purchase = $this->manageContent->getValueWhere("purchase_info","*","order_id",$payment['order_id']);
+					//checking for membership_id
+					if($payment['membership_id'] == 'guest')
+					{
+						$member_name = 'guest';
+					}
+					else
+					{
+						$member = $this->manageContent->getValueWhere("member_table","*","membership_id",$payment['membership_id']);
+						$member_name = $member[0]['name'];
+					}
+					if($purchase[0]['payment_status'] == 0 && $purchase[0]['payment_request'] == $input_field)
+					{
+						//showing them in table
+						echo '<tbody>
+								<tr>
+									<td><a href="orderDetails.php?o_id='.$payment['order_id'].'">'.$payment['order_id'].'</a></td>
+									<td>'.$member_name.'</td>
+									<td>'.$payment['date'].'</td>
+									<td> €'.$payment['price'].'</td>';
+									if($input_field == NULL)
+									{
+										echo '<td>
+										<a href="v-includes/functions/function.paymentConfirmByAccount.php?o_id='.$payment['order_id'].'">
+											<button class="btn btn-success" type="button">
+												<span class="icon-pencil"></span>&nbsp;&nbsp;CONFIRM</button>
+											</a></td>';
+									}
+									else if($input_field == 'Progressing')
+									{
+										echo '<td>
+										<a href="v-includes/functions/function.finalConfirmationPaymentByAccount.php?o_id='.$payment['order_id'].'">
+											<button class="btn btn-danger" type="button">
+												<span class="icon-pencil"></span>&nbsp;&nbsp;FINAL CONFIRM</button>
+											</a></td>
+										<td><a href="v-includes/functions/function.undoPaymentConfirmationByAccount.php?o_id='.$payment['order_id'].'">
 											<button class="btn btn-warning" type="button">
 												<span class="icon-pencil"></span>&nbsp;&nbsp;UNDO</button>
 											</a></td>';
@@ -1940,6 +2009,7 @@
 			$total_amount = 0;
 			$withdraw_amount = 0;
 			$withdraw_requested_amount = 0;
+			$purchase_by_account = 0;
 			$net_amount = 0;
 			if(count($transaction[0]) > 0)
 			{  
@@ -2005,15 +2075,22 @@
 				{
 					foreach($withdraws as $withdrawal)
 					{
-						//checking for status of money transfer
-						if($withdrawal['status'] == 1)
+						if(substr($withdrawal['withdraw_order_id'],0,8) == 'withdraw')
 						{
-							$withdraw_amount = $withdraw_amount + $withdrawal['withdraw_amount'];
+							//checking for status of money transfer
+							if($withdrawal['status'] == 1)
+							{
+								$withdraw_amount = $withdraw_amount + $withdrawal['withdraw_amount'];
+							}
+							//checking for requested amount
+							else
+							{
+								$withdraw_requested_amount = $withdraw_requested_amount + $withdrawal['withdraw_amount'];
+							}
 						}
-						//checking for requested amount
 						else
 						{
-							$withdraw_requested_amount = $withdraw_requested_amount + $withdrawal['withdraw_amount'];
+							$purchase_by_account = $purchase_by_account + $withdrawal['withdraw_amount'];
 						}
 					}
 				}
@@ -2028,7 +2105,7 @@
 					<td></td>
 					<td></td>
 					<td></td>
-					<td class="total_amount" style="color:red;"> Gross Amount: </td>
+					<td class="total_amount"> Gross Amount: </td>
 					<td>  € '.$total_amount.'</td>
 				</tr>';
 			
@@ -2036,7 +2113,7 @@
 					<td></td>
 					<td></td>
 					<td></td>
-					<td class="total_amount" style="color:red;"> Withdrew Amount: </td>
+					<td class="total_amount"> Withdrew Amount: </td>
 					<td>  € '.$withdraw_amount.'</td>
 				</tr>';
 			
@@ -2046,20 +2123,30 @@
 						<td></td>
 						<td></td>
 						<td></td>
-						<td class="total_amount" style="color:red;"> Amount Requested for Withdrawal: </td>
+						<td class="total_amount"> Amount Requested for Withdrawal: </td>
 						<td>  € '.$withdraw_requested_amount.'</td>
 					</tr>';
 			}
-			if(($total_amount - ($withdraw_requested_amount + $withdraw_amount)) != 0)
+			if(!empty($purchase_by_account))
+			{
+				echo '<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td class="total_amount"> Product Purchase Amount: </td>
+						<td>  € '.$purchase_by_account.'</td>
+					</tr>';
+			}
+			if(($total_amount - ($withdraw_requested_amount + $purchase_by_account + $withdraw_amount)) != 0)
 			{
 				echo '<tr>
 					<td></td>
 					<td></td>
 					<td></td>
-					<td class="total_amount" style="color:red;"> Net Amount: </td>
-					<td>  € '.($total_amount - ($withdraw_requested_amount + $withdraw_amount)).'</td>
+					<td class="total_amount"> Net Amount: </td>
+					<td>  € '.($total_amount - ($withdraw_requested_amount + $purchase_by_account + $withdraw_amount)).'</td>
 				</tr>';
-				return ($total_amount - ($withdraw_requested_amount + $withdraw_amount));
+				return ($total_amount - ($withdraw_requested_amount + $purchase_by_account + $withdraw_amount));
 			}
 			else
 			{
@@ -2067,10 +2154,10 @@
 					<td></td>
 					<td></td>
 					<td></td>
-					<td class="total_amount" style="color:red;"> Net Amount: </td>
-					<td>  € '.(int)($total_amount - ($withdraw_requested_amount + $withdraw_amount)).'</td>
+					<td class="total_amount"> Net Amount: </td>
+					<td>  € '.(int)($total_amount - ($withdraw_requested_amount + $purchase_by_account + $withdraw_amount)).'</td>
 				</tr>';
-				return (int)($total_amount - ($withdraw_requested_amount + $withdraw_amount));
+				return (int)($total_amount - ($withdraw_requested_amount + $purchase_by_account + $withdraw_amount));
 			}
 			
 		}

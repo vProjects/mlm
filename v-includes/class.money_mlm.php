@@ -457,6 +457,93 @@
 			 $payment_status = $this->manage_data->updateValueWhere("purchase_info","payment_request","Confirm","order_id",$order_id);
 		 }
 		 
+		 /* method for distribute money among parents for my account transfer
+		 	Auth Dipanjan
+		 */
+		 function distributeMoneyByMyAccount($order_id){
+			 //getting purchase info from dtabase
+			 $purchase_details = $this->manage_data->getValue_where("purchase_info","*","order_id",$order_id);
+			 //getting date of insertion
+			 $date = $this->getDate();
+			 //executing every value in order
+			 foreach($purchase_details as $purchase){
+				 //getting membership id
+				 $member = $this->manage_data->getValue_where("purchase_log","membership_id","order_id",$order_id);
+				 //getting last system balence
+				 $system_balence = $this->manage_data->getLastValue("money_transfer_log","system_balence","id");
+				 //checking for guest or member
+				 if($member[0]['membership_id'] == 'guest')
+				 {
+					 $price = 'price_guest';
+				 }
+				 else
+				 {
+					 $price = 'price_members';
+				 }
+				//checking for membership product
+				if(substr($purchase['product_id'],0,1) == 'M')
+				{
+					//getting product price
+					$product_price = $this->manage_data->getValue_where("membership_product","*","product_id",$purchase['product_id']);
+					//amount credited
+					$amount = $purchase['quantity']*$product_price[0]['price'];
+					//new system balence
+					$new_balance = $system_balence[0]['system_balence'] + $amount;
+					//inserted credit amount
+					$result = $this->manage_data->insertCreditAmount($member[0]['membership_id'],
+					$purchase['product_id'],$purchase['quantity'],$date,$amount,$new_balance,0,"");
+					//updating the membership_activation column of member table
+					$membership_activation = $this->manage_data->updateValueWhere("member_table","membership_activation",1,"membership_id",$member[0]['membership_id']);
+					if($result == 1 && $member[0]['membership_id'] != 'guest')
+					{
+						//calling function for distribute money
+						$result = $this->moneyCalculationForMembershipProduct($member[0]['membership_id'],$purchase['product_id']);
+					}
+										
+				}
+				//checking for member product
+				else if(substr($purchase['product_id'],0,1) == 'P')
+				{
+					//getting product price
+					$product_price = $this->manage_data->getValue_where("product_table","*","product_id",$purchase['product_id']);
+					//amount credited
+					$amount = $purchase['quantity']*$product_price[0][$price];
+					//new system balence
+					$new_balance = $system_balence[0]['system_balence'] + $amount;
+					//inserted credit amount
+					$result = $this->manage_data->insertCreditAmount($member[0]['membership_id'],
+					$purchase['product_id'],$purchase['quantity'],$date,$amount,$new_balance,0,"");
+					if($result == 1 && $member[0]['membership_id'] != 'guest')
+					{
+						//calling function for distribute money
+						$result = $this->moneyCalculationForMemberProduct($member[0]['membership_id'],$purchase['product_id'],$purchase['quantity']);
+					}
+				}
+				//checking for coupon in table
+				else if(substr($purchase['product_id'],0,1) == 'C')
+				{
+					//getting coupon price
+					$coupon = $this->manage_data->getValue_where("coupon_table","*","coupon_id",$purchase['product_id']);
+					//amount credited
+					$amount = $purchase['quantity']*$coupon[0][$price];
+					//new system balence
+					$new_balance = $system_balence[0]['system_balence'] + $amount;
+					//inserted credit amount
+					$result = $this->manage_data->insertCreditAmount($member[0]['membership_id'],
+					$purchase['product_id'],$purchase['quantity'],$date,$amount,$new_balance,0,"");
+					if($result == 1 && $member[0]['membership_id'] != 'guest')
+					{
+						//calling function for distribute money
+						$result = $this->moneyCalculationForCoupon($member[0]['membership_id'],$purchase['product_id']);
+					}
+				} 
+			 }
+			 //approve the payment confirmation
+			 $update = $this->manage_data->updateValueWhere("purchase_info","payment_status",1,"order_id",$order_id);
+			 $payment_status = $this->manage_data->updateValueWhere("purchase_info","payment_request","Confirm","order_id",$order_id);
+			 $withdrawal_status = $this->manage_data->updateValueWhere("withdraw_log","status",1,"withdraw_order_id",$order_id);
+		 }
+		 
 		 /*method which inserts users final value at the time of payment through paypal
 		 	Auth Dipanjan
 		 */

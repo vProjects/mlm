@@ -125,8 +125,11 @@
                 <div class="accordion-inner">
                     <ul class="nav nav-pills nav-stacked">
                         <li><a href="duePayment.php"><span class="icon-hand-right"></span>&nbsp;&nbsp;Pending Payments</a></li>
+                        <li><a href="duePaymentMyAccount.php"><span class="icon-hand-right"></span>&nbsp;&nbsp;Pending MyAccount</a></li>
                         <li><a href="finalConfirmationPayment.php"><span class="icon-hand-right"></span>&nbsp;&nbsp;Final Confirmation</a></li>
+                        <li><a href="finalConfirmationByAccount.php"><span class="icon-hand-right"></span>&nbsp;&nbsp;Final Confirm My Account</a></li>
                         <li><a href="canceledPayment.php"><span class="icon-hand-right"></span>&nbsp;&nbsp;Undo Request</a></li>
+                        <li><a href="canceledPaymentMyAccount.php"><span class="icon-hand-right"></span>&nbsp;&nbsp;Undo Request My Account</a></li>
                     </ul>
                 </div>
             </div>
