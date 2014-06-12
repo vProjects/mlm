@@ -4,9 +4,6 @@
     if(!isset($_SESSION['memberId'])){
         header("Location: sign_up.php");
     }
-	if(!isset($_SESSION['invalid_member'])){
-        header("Location: index.php");
-    }
 	// include header section
 	include ('v-templates/header.php');
 	 
@@ -21,29 +18,41 @@
 
     <!-- body starts here -->
     <div class="row-fluid">
+        <?php
+			if($invalid_conditions[0] == 1)
+			{
+				//include left sidebar section
+				include 'v-templates/left_sidebar.php';
+				$right_con = 'span8';
+			}
+			else
+			{
+				$right_con = 'span8 offset2';
+			}
+		?>
         <!-- rightcontainer starts here -->
-        <div class="span8 offset2">
+        <div class="<?php echo $right_con; ?>">
         	<div class="row-fluid">
-        		<h2 class="page_heading">Invalid Member</h2>
+        		<!--<h2 class="page_heading">Invalid Member</h2>-->
             </div>
             <div class="row-fluid">
             	<div class="span12">
                 	<?php
 						if($invalid_conditions[0] == 0 && $invalid_conditions[1] == 0)
 						{
-							echo '<h3>Niste potrdili svojega e-mail naslova. Prosimo aktivirajte svoj naslov z klikom na povezavo, ki ste jo dobili na vaš e-mail naslov.</h3>
-							<h3>Niste zaključili s plačilom članarine. Prosimo kliknite na »Membership« spodaj nato pa pojdite v »moj voziček« in dokončajte nakup in plačilo »Membership« članarine.</h3>';
+							$getInvalidText1 = $manageContent->getInvalidMemberContent(1);
+							$getInvalidText2 = $manageContent->getInvalidMemberContent(2);
 							$getMemberProduct = $manageContent->getMembershipProduct(); 
                             echo '</div>';
 									
 						}
 						else if($invalid_conditions[0] == 0)
 						{
-							echo '<h3>Niste potrdili svojega e-mail naslova. Prosimo aktivirajte svoj naslov z klikom na povezavo, ki ste jo dobili na vaš e-mail naslov.</h3>';
+							$getInvalidText1 = $manageContent->getInvalidMemberContent(1);
 						}
 						else if($invalid_conditions[1] == 0)
 						{
-							echo '<h3>Niste zaključili s plačilom članarine. Prosimo kliknite na »Membership« spodaj nato pa pojdite v »moj voziček« in dokončajte nakup in plačilo »Membership« članarine.</h3>';
+							$getInvalidText2 = $manageContent->getInvalidMemberContent(2);
 							$getMemberProduct = $manageContent->getMembershipProduct(); 
                             echo '</div>';
 						}

@@ -65,6 +65,10 @@
                     <input type="text" placeholder="Price for Members" class="textbox1" name="price_members"/>
                 </div>
                 <div class="form-control v-form">
+                	<label class="control-label">Tax:</label>
+                    <input type="text" placeholder="Tax" class="textbox1" name="tax"/>
+                </div>
+                <div class="form-control v-form">
                 	<label class="control-label">Discount Rate:</label>
                     <input type="text" placeholder="Discount" class="textbox1" name="discount"/>
                 </div>

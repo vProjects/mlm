@@ -15,6 +15,7 @@
                         <li><a href="mlmDetails.php"><span class="icon-hand-right"></span>&nbsp;&nbsp;MLM Details</a></li>
                     	<li><a href="upgradeMembershipValidiation.php"><span class="icon-hand-right"></span>&nbsp;&nbsp; Membership Validiation</a></li>
                         <li><a href="addFreeMember.php"><span class="icon-hand-right"></span>&nbsp;&nbsp; Add Free Member</a></li>
+                        <li><a href="memberStatistics.php"><span class="icon-hand-right"></span>&nbsp;&nbsp; Member Statistics</a></li>
                     </ul>
                 </div>
             </div>
@@ -74,6 +75,7 @@
                     <ul class="nav nav-pills nav-stacked">
                         <li><a href="pendingWithdrawal.php"><span class="icon-hand-right"></span>&nbsp;&nbsp;Pending Withdrawals</a></li>
                         <li><a href="successWithdrawal.php"><span class="icon-hand-right"></span>&nbsp;&nbsp;Success Withdrawals</a></li>
+                        <li><a href="withdrawStatistics.php"><span class="icon-hand-right"></span>&nbsp;&nbsp;Withdraw Statistics</a></li>
                     </ul>
                 </div>
             </div>
@@ -107,6 +109,7 @@
                     <ul class="nav nav-pills nav-stacked">
                         <li><a href="systemBalence.php"><span class="icon-hand-right"></span>&nbsp;&nbsp;Total System Balence</a></li>
                         <li><a href="trustAccount.php"><span class="icon-hand-right"></span>&nbsp;&nbsp;Trust Account</a></li>
+                        <li><a href="potentialAmount.php"><span class="icon-hand-right"></span>&nbsp;&nbsp;Potential Money</a></li>
                         <li><a href="creditDetails.php"><span class="icon-hand-right"></span>&nbsp;&nbsp;Credit Details</a></li>
                         <li><a href="debitDetails.php"><span class="icon-hand-right"></span>&nbsp;&nbsp;Debit Details</a></li>
                     </ul>
@@ -128,8 +131,10 @@
                         <li><a href="duePaymentMyAccount.php"><span class="icon-hand-right"></span>&nbsp;&nbsp;Pending MyAccount</a></li>
                         <li><a href="finalConfirmationPayment.php"><span class="icon-hand-right"></span>&nbsp;&nbsp;Final Confirmation</a></li>
                         <li><a href="finalConfirmationByAccount.php"><span class="icon-hand-right"></span>&nbsp;&nbsp;Final Confirm My Account</a></li>
+                        <li><a href="finalConfirmationByPaypal.php"><span class="icon-hand-right"></span>&nbsp;&nbsp;Final Confirm By Paypal</a></li>
                         <li><a href="canceledPayment.php"><span class="icon-hand-right"></span>&nbsp;&nbsp;Undo Request</a></li>
                         <li><a href="canceledPaymentMyAccount.php"><span class="icon-hand-right"></span>&nbsp;&nbsp;Undo Request My Account</a></li>
+                        <li><a href="cancelPaymentPaypal.php"><span class="icon-hand-right"></span>&nbsp;&nbsp;Undo Request Paypal</a></li>
                     </ul>
                 </div>
             </div>
@@ -151,6 +156,7 @@
                         <li><a href="listFooterLinks.php"><span class="icon-hand-right"></span>&nbsp;&nbsp;List Footer Links</a></li>
                         <li><a href="editFooterBottomText.php"><span class="icon-hand-right"></span>&nbsp;&nbsp;Edit Footer Text</a></li>
                         <li><a href="editSliderContent.php"><span class="icon-hand-right"></span>&nbsp;&nbsp;Edit Slider Content</a></li>
+                        <li><a href="editInvalidMemberContent.php"><span class="icon-hand-right"></span>&nbsp;&nbsp;Invalid Member Content</a></li>
 
                     </ul>
                 </div>
@@ -171,6 +177,7 @@
                         <li><a href="purchaseDetails.php"><span class="icon-hand-right"></span>&nbsp;&nbsp;Purchase Details</a></li>
                         <li><a href="ordersMembers.php"><span class="icon-hand-right"></span>&nbsp;&nbsp;Member Orders List</a></li>
                         <li><a href="ordersGuest.php"><span class="icon-hand-right"></span>&nbsp;&nbsp;Guest Orders List</a></li>
+                        <li><a href="invoiceDetails.php"><span class="icon-hand-right"></span>&nbsp;&nbsp; Invoice details</a></li>
                         
                     </ul>
                 </div>
@@ -194,6 +201,41 @@
                 </div>
             </div>
         </div><!--10th accordion menu starts here-->
+        
+        <!--11th accordion menu starts here-->
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse11">
+                <span class="icon-list-alt"></span>&nbsp;&nbsp;Add Money EWallet
+                </a>
+            </div>
+            <div id="collapse11" class="accordion-body collapse">
+                <div class="accordion-inner">
+                    <ul class="nav nav-pills nav-stacked">
+                        <li><a href="pending_add_money.php"><span class="icon-hand-right"></span>&nbsp;&nbsp;Pending Details</a></li>
+                        <li><a href="successfull_add_money.php"><span class="icon-hand-right"></span>&nbsp;&nbsp;Successfull Details</a></li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div><!--11th accordion menu starts here-->
+        
+        <!--12th accordion menu starts here-->
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse12">
+                <span class="icon-list-alt"></span>&nbsp;&nbsp;Membership Extendation
+                </a>
+            </div>
+            <div id="collapse12" class="accordion-body collapse">
+                <div class="accordion-inner">
+                    <ul class="nav nav-pills nav-stacked">
+                        <li><a href="membership_extendation.php"><span class="icon-hand-right"></span>&nbsp;&nbsp;Membership Extension</a></li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div><!--12th accordion menu starts here-->
         
     </div>
 </div><!--sidebar ends here-->

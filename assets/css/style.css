@@ -101,6 +101,13 @@ body{
 	display:none;
 	height:20px;
 }
+.slider_anchor{
+	color:#ffffff;
+}
+.slider_anchor:hover{
+	color:#ffffff;
+	text-decoration:none;
+}
 .left_container{
 	padding-right:15px;
 	border-right: 1px solid #eee;
@@ -108,10 +115,13 @@ body{
 .left_container_heading{
 	margin-bottom:20px;
 	font-size: 16px;
-	line-height: 16px;
+	line-height: 22px;
 	color: #333;
 	border-bottom: 1px solid #eee;
 	text-transform:uppercase;
+}
+#latest_products{
+	display:block;
 }
 .heading_text{
 	padding-right:40px;
@@ -246,6 +256,9 @@ body{
 }
 .membership_product_img{
 	height:120px;
+}
+.man_field{
+	color:#F00;
 }
 /* login page css */
 .login_page{
@@ -387,6 +400,10 @@ body{
 	color:#ff0010;
 	font-weight:bold;
 }
+.table_list_ewallet{
+	max-height:100px;
+	overflow-y:scroll;
+}
 .withdraw_btn{
 	text-align:center;
 }
@@ -433,7 +450,7 @@ body{
     top: 0;
     width: 20%;
     min-width: 360px;
-    display: none;
+	display:none;
 }
 .socialIcons {
     width: 40px;
@@ -485,6 +502,23 @@ body{
     opacity: 0.5;
     background: #CCC;
 }
+
+.addMoney_submit{
+	background-image:url(../../img/btn_buynowCC_LG.gif);
+	height:50px;
+	width:175px !important;
+	background-color:transparent;
+	border:none;
+	background-repeat:no-repeat;
+}
+
+.am_radio_section{
+	margin:20px 0;
+}
+.am_radio_button{
+	margin:0 10px;
+}
+
 /* MailChimp Form Embed Code - Slim - 08/17/2011 */
 #mc_embed_signup form {display:block; position:relative; text-align:left; padding:0px 0 0px 3%}
 #mc_embed_signup h2 {font-weight:bold; padding:0; margin:15px 0; font-size:1.4em;}
@@ -507,3 +541,25 @@ body{
 #mc_embed_signup #mce-error-response {display:none;}
 #mc_embed_signup #mce-success-response {color:#529214; display:none;}
 #mc_embed_signup label.error {display:block; float:none; width:auto; margin-left:1.05em; text-align:left; padding:.5em 0;}
+
+
+/* media queries */
+
+@media (max-width: 767px){
+	#latest_products{
+		display:none;
+	}
+	#product_image{
+		height:auto;
+		max-width:100%;
+		width:auto;
+		border: 6px solid #E3E3E3;
+		border-radius:3px;
+	}
+}
+@media (max-width: 979px){
+	.navbar .nav > li > a {
+		font-weight:normal;
+	}
+}
+

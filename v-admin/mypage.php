@@ -18,7 +18,7 @@
         </blockquote>
         
         <div class="form-horizontal">
-            <form action="" method="post">
+            <form action="v-includes/functions/function.createnewpage.php" method="post">
                 <div class="form-control v-form">
                     <div class="alert alert-success fade in" style="display: none">
                         <button type="button" class="close" data-dismiss="alert">×</button>
@@ -35,7 +35,7 @@
                  
                 <div class="form-control v-form">
                     <div class="function_result"></div>
-                    <button type="button" value="SUBMIT" id="createPage" data-loading-text="Creating Page..." class="btn btn-large btn-inverse btn1">Create Page</button>
+                    <input type="submit" value="Create Page" class="btn btn-large btn-inverse btn1" />
                     <div class="clearfix"></div>
                 </div>
             </form>
@@ -52,35 +52,3 @@
     //get footer
     include('v-templates/footer.php');
 ?>
-<script type="text/javascript">
-$(document).ready(function(){    
-    $('#createPage').click(function(){
-        var pageName = $('#pageName').val();
-        var pageContent = CKEDITOR.instances.editor1.getData();
-        
-        
-        
-        data = 'pageName='+pageName+'&pageContent='+pageContent;
-        $.ajax({
-                    type: "POST",
-                    url:"v-includes/functions/function.createnewpage.php",
-                    data: data,
-                    beforeSend:function(){
-                        // this is where we append a loading image
-                        $('').html('');
-                        $('#createPage').button('loading')
-                      },
-                    success:function(result){
-                        $('#createPage').button('reset');
-                        $('.alert').css({'display':'block'});
-                        return false;
-                }});
-        
-        
-        event.preventDefault()
-    });
-    
-    
-        
-  });
-</script>

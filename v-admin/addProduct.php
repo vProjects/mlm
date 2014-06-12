@@ -24,6 +24,10 @@
 				{
 					echo '<div class="alert alert-success" id="success_msg">Your Product Is Added Properly</div>';
 				}
+				if($GLOBALS['_GET']['msg'] == 7777)
+				{
+					echo '<div class="alert alert-error" id="warning_msg">Product Upload Unsuccessfull!!</div>';
+				}
 				
 			}
 		?>
@@ -59,6 +63,10 @@
                 <div class="form-control v-form">
                 	<label class="control-label">Price for Members:</label>
                     <input type="text" placeholder="Price for Members" class="textbox1" name="price_members"/>
+                </div>
+                <div class="form-control v-form">
+                	<label class="control-label">Tax:</label>
+                    <input type="text" placeholder="Tax" class="textbox1" name="tax"/>
                 </div>
                 <div class="form-control v-form">
                 	<label class="control-label">Discount Rate:</label>

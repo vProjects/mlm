@@ -17,6 +17,7 @@
 		$old_price = $_POST['old_price'];
 		$price_guest = $_POST['price_guest'];
 		$price_members = $_POST['price_members'];
+		$tax = $_POST['tax'];
 		$discount = $_POST['discount'];
 		$stock = $_POST['stock'];
 		$expiration_date = $_POST['expiration_date'];
@@ -92,6 +93,11 @@
 	if(isset($price_members))
 	{
 		$result = $manageData->updateValueWhere("coupon_table","price_members",$price_members,"id",$id);	
+	}
+	
+	if(isset($tax))
+	{
+		$result = $manageData->updateValueWhere("coupon_table","tax",$tax,"id",$id);	
 	}
 	
 	if(isset($discount))

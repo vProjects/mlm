@@ -28,7 +28,18 @@
                   $_SESSION['login_error'] = 'Email ID or password entered is incorrect';
                   header('Location: ../../login.php');
               }
-			  else if($result[0] == 'failed' && $result[1] == 'invalid'){
+			  else if($result[0] == 'failed' && $result[1] == 'invalid_email'){
+				  // sets the session variable for invalid member
+                  $_SESSION['memberId'] = $result[2];
+				  $_SESSION['invalid_member'] = 'Invalid Member';
+                  header('Location: ../../invalidMember.php');
+			  }
+			  else if($result[0] == 'failed' && $result[1] == 'invalid_user'){
+				  // sets the session variable for invalid member
+                  $_SESSION['memberId'] = $result[2];
+                  header('Location: ../../invalidMember.php');
+			  }
+			  else if($result[0] == 'failed' && $result[1] == 'invalid_all'){
 				  // sets the session variable for invalid member
                   $_SESSION['memberId'] = $result[2];
 				  $_SESSION['invalid_member'] = 'Invalid Member';

@@ -1,9 +1,6 @@
 <?php
     session_start();
     $page_title = 'activation';
-    
-    
-    
     if(!isset($_SESSION['memberId'])){
         header("Location: sign_up.php");
     }

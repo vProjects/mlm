@@ -409,6 +409,22 @@ function alertWarning(msg) {
 	setInterval('$( "#warning_msg" ).hide()', 5000);
 }
 
+/* setting site cookie alert*/
+
+$(document).ready(function(e) {
+	//checking for cookie is set or not
+    if(getCookie('alertCookie') != 'accept')
+	{
+		$('.cookiealert').css('display','block');
+	}
+	
+	//create cookie
+	$('#cookieAlertAccept').click(function(e) {
+		console.log('abc');
+        createCookie('alertCookie','accept',365);
+    });
+});
+
 
 /*function ReadCookie()
 {

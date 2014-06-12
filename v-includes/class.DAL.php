@@ -109,6 +109,27 @@
 				throw "Result Not Found";
 			}
 		}
+		
+		function getValue_twoCoditions_descending($table_name,$value,$row_value1,$value_entered1,$row_value2,$value_entered2)
+		{
+			try{
+				$query = $this->link->query("SELECT $value from $table_name where $row_value1='$value_entered1' AND $row_value2='$value_entered2' ORDER BY `id` DESC");
+				$query->execute();
+				$rowcount = $query->rowCount();
+				if($rowcount > 0){
+					$result = $query->fetchAll(PDO::FETCH_ASSOC);
+					return $result;
+				}
+				else{
+					return $rowcount;
+				}
+			}
+			catch(Exception $e)
+			{
+				throw "Result Not Found";
+			}
+		}
+		
 		//get all the latest aricles 
 		function getValue_latest($table_name,$value)
 		{
@@ -139,11 +160,11 @@
 		}
 		
 		//function for inserting member's details
-		function insertMember($name,$email_id,$contact_no,$address,$city,$postal_code,$state,$country,
+		function insertMember($name,$email_id,$dob,$gender,$contact_no,$address,$city,$postal_code,$state,$country,
 		$username,$password,$membership_id,$date,$expiration_date)
 		{
-			$query = $this->link->prepare("INSERT INTO `member_table`(`name`, `email_id`, `contact_no`,`address`, `city`, `postal_code`, `state`, `country`, `username`, `password`, `membership_id`, `date`, `expiration_date`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
-			$values = array($name,$email_id,$contact_no,$address,$city,$postal_code,$state,$country,$username,$password,$membership_id,$date,$expiration_date);
+			$query = $this->link->prepare("INSERT INTO `member_table`(`name`, `email_id`, `dob`, `gender`, `contact_no`,`address`, `city`, `postal_code`, `state`, `country`, `username`, `password`, `membership_id`, `date`, `expiration_date`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+			$values = array($name,$email_id,$dob,$gender,$contact_no,$address,$city,$postal_code,$state,$country,$username,$password,$membership_id,$date,$expiration_date);
 			$query->execute($values);
 			return $query->rowCount();
 		}
@@ -197,6 +218,16 @@
 			$query->execute($values);
 			return $query->rowCount();
 		}
+		/*method for inserting information in purchase info table
+		//Auth Dipanjan  
+		*/
+		function insertPurchaseInfoPaypal($order_id,$product_id,$quantity,$date,$payment_method,$payment_request,$payment_status){
+			$query = $this->link->prepare("INSERT INTO `purchase_info`(`order_id`, `product_id`, `quantity`, `date`, `payment_method`, `payment_request`, `payment_status`) VALUES (?,?,?,?,?,?,?)");
+			$values = array($order_id,$product_id,$quantity,$date,$payment_method,$payment_request,$payment_status);
+			$query->execute($values);
+			return $query->rowCount();
+		}
+		
 		/*method for inserting account information of member
 		//Auth Dipanjan  
 		*/
@@ -372,6 +403,28 @@
 				return $rowcount;
 			}
 		}
+		
+		/*method for inserting values to given table
+		//Auth Dipanjan  
+		*/
+		function insertValue($table_name,$column_name,$column_values){
+			//declaring variables for preparing the query
+			$column = "";
+			$value = "";
+			for($i=0;$i<count($column_name);$i++)
+			{
+				$column = $column."`".$column_name[$i]."`, ";
+				$value = $value."?,"; 
+			}
+			//modifying the string for column name and values
+			$column = substr($column,0,-2);
+			$value = substr($value,0,-1);
+			$query = $this->link->prepare("INSERT INTO `$table_name`($column) VALUES ($value)");
+			$query->execute($column_values);
+			return $query->rowCount();
+		}
+		
+		
 		
 		 /* ====== codes written by vasu ================== */
         

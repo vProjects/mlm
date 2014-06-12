@@ -23,6 +23,7 @@
                     <th>Date</th>
                     <th>Total Amount</th>
                     <th>Action</th>
+                    <th>Delete</th>
                 </tr>
             </thead>
             

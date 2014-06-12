@@ -33,48 +33,47 @@
 				{ ?>
             
             <div class="row-fluid">
-            	<form action="v-includes/functions/function.editAccount.php" id="signup_form" 
+            	<form action="v-includes/functions/function.editAccount.php" id="btn_submit_account" 
                 class="form-horizontal" method="post">
                 	<h4 class="form_caption">Your A/C Details</h4>
                     <div class="control-group">
                         <label class="control-label" id="form_label">A/C Holder Name:</label>
                         <div class="controls">
                         	<input type="text" placeholder="Account Holder Name" name="ac_name" id="v-ac_name">
-                            <div id="err_f_name"></div>
+                            <div id="err_v-ac_name"></div>
                         </div>
                     </div>
                     <div class="control-group">
                         <label class="control-label" id="form_label">A/C Number:</label>
                         <div class="controls">
                         	<input type="text" placeholder="Account Number" name="ac_no" id="v-ac_no">
-                            <div id="err_f_name"></div>
+                            <div id="err_v-ac_no"></div>
                         </div>
                     </div>
                     <div class="control-group">
                         <label class="control-label" id="form_label">Bank Name:</label>
                         <div class="controls">
                         	<input type="text" placeholder="Bank Name" name="bank" id="v-bank">
-                            <div id="err_f_name"></div>
+                            <div id="err_v-bank"></div>
                         </div>
                     </div>
                     <div class="control-group">
                         <label class="control-label" id="form_label">Branch Name:</label>
                         <div class="controls">
                         	<input type="text" placeholder="Branch Name" name="branch" id="v-branch">
-                            <div id="err_f_name"></div>
+                            <div id="err_v-branch"></div>
                         </div>
                     </div>
                     <div class="control-group">
-                        <label class="control-label" id="form_label">IFSC Code:</label>
+                        <label class="control-label" id="form_label">Tax Number:</label>
                         <div class="controls">
-                        	<input type="text" placeholder="IFSC Code of the Bank" name="ifsc_code" id="v-ifsc_code">
-                            <div id="err_f_name"></div>
+                        	<input type="text" placeholder="Tax Number" name="ifsc_code">
                         </div>
                     </div>
                     <div class="control-group">
                         <div class="controls">
                         	<input type="hidden" name="membership_id" value="<?php echo $membership_id; ?>">
-                            <input type="submit" class="btn btn-inverse btn-large" id="btn_submit" value="SUBMIT">
+                            <input type="button" class="btn btn-inverse btn-large" value="PREDLOŽI" onclick="validiateAccountInformation('btn_submit_account')">
                         </div>
                     </div>
                 </form>
@@ -82,7 +81,7 @@
             <?php }  else  { ?>
             
 				<div class="row-fluid">
-                    <form action="v-includes/functions/function.updateAccount.php" id="signup_form" class="form-horizontal" method="post">
+                    <form action="v-includes/functions/function.updateAccount.php" class="form-horizontal" id="updateAccountForm" method="post">
                         <h4 class="form_caption">Your A/C Details</h4>
                         
 			<?php	$account_details = $manageContent->getAccountDetails($membership_id); ?>

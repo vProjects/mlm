@@ -50,34 +50,47 @@
                 class="form-horizontal" method="post">
                 	<h4 class="form_caption">Osebni podatki</h4>
                     <div class="control-group">
-                        <label class="control-label" id="form_label">Ime:</label>
+                        <label class="control-label" id="form_label">Ime:<span class="man_field">**</span></label>
                         <div class="controls">
                         	<input type="text" placeholder="" name="f_name" id="v_f_name">
                             <div id="err_f_name"></div>
                         </div>
                     </div>
                     <div class="control-group">
-                        <label class="control-label" id="form_label">Priimek:</label>
+                        <label class="control-label" id="form_label">Priimek:<span class="man_field">**</span></label>
                         <div class="controls">
                         	<input type="text" placeholder="" name="l_name">
                         </div>
                     </div>
                     <div class="control-group">
-                        <label class="control-label" id="form_label">E-pošta:</label>
+                        <label class="control-label" id="form_label">E-pošta:<span class="man_field">**</span></label>
                         <div class="controls">
                         	<input type="text" placeholder="" name="email_id" id="v_email">
                             <div id="err_email"></div>
                         </div>
                     </div>
                     <div class="control-group">
-                        <label class="control-label" id="form_label">Kontaktna št:</label>
+                        <label class="control-label" id="form_label">Datum rojstva:<span class="man_field">**</span></label>
+                        <div class="controls">
+                            <input type="text" placeholder="" name="dob" id="calender_date">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" id="form_label">Spol:<span class="man_field">**</span></label>
+                        <div class="controls">
+                            <input type="radio" name="gender" value="male" checked="checked" /> moški
+                            <input type="radio" name="gender" value="female" />  ženska
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" id="form_label">Kontaktna št:<span class="man_field">**</span></label>
                         <div class="controls">
                         	<input type="text" placeholder="" name="contact_no" id="v_contact_no">
                             <div id="err_cntct"></div>
                         </div>
                     </div>
                      <div class="control-group">
-                        <label class="control-label" id="form_label">ID številka priporočitelja:</label>
+                        <label class="control-label" id="form_label">ID številka priporočitelja:<span class="man_field">**</span></label>
                         <div class="controls">
                         	<input type="text" placeholder="" name="Senior_id" id="v_senior_id">
                             <div id="err_senior_id"></div>
@@ -86,7 +99,7 @@
                     
                     <h4 class="form_caption">Vaš naslov</h4>
                     <div class="control-group">
-                        <label class="control-label" id="form_label">Naslov 1:</label>
+                        <label class="control-label" id="form_label">Naslov 1:<span class="man_field">**</span></label>
                         <div class="controls">
                         	<input type="text" placeholder="" name="address1" id="v_address">
                             <div id="err_address"></div>
@@ -105,43 +118,47 @@
                         </div>
                     </div>
                     <div class="control-group">
-                        <label class="control-label" id="form_label">Poštna številka:</label>
+                        <label class="control-label" id="form_label">Poštna številka:<span class="man_field">**</span></label>
                         <div class="controls">
                         	<input type="text" placeholder="" name="postal_code">
                         </div>
                     </div>
                     <div class="control-group">
-                        <label class="control-label" id="form_label">Regija/država:</label>
+                        <label class="control-label" id="form_label">Država:<span class="man_field">**</span></label>
                         <div class="controls">
-                        	<input type="text" placeholder="" name="state">
+                            <select name="country_id" id="signup_country">
+                                <?php $manageContent->getCountryList('Slovenia'); ?>
+                            </select>
                         </div>
                     </div>
                     <div class="control-group">
-                        <label class="control-label" id="form_label">Država:</label>
+                        <label class="control-label" id="form_label">Regija/država:<span class="man_field">**</span></label>
                         <div class="controls">
-                        	<input type="text" placeholder="" name="country">
+                        	<select name="state_id" id="signup_state">
+                                <?php $manageContent->getStateList(''); ?>
+                            </select>
                         </div>
                     </div>
                     
-                    <h4 class="form_caption">Članstvo</h4>
+                    <!--<h4 class="form_caption">Članstvo</h4>
                     <div class="control-group">
                         <label class="control-label" id="form_label">Izberite članstvo:</label>
                         <div class="controls">
-                        	<?php $getMemberProduct = $manageContent->getMembershipProduct(); ?>
+                        	<?php //$getMemberProduct = $manageContent->getMembershipProduct(); ?>
                             </div>
                             </div>
-                        </div>
+                        </div>-->
 
                     <h4 class="form_caption">Geslo</h4>
                     <div class="control-group">
-                        <label class="control-label" id="form_label">Geslo:</label>
+                        <label class="control-label" id="form_label">Geslo:<span class="man_field">**</span></label>
                         <div class="controls">
                         	<input type="password" placeholder="" name="password" id="v_password">
                             <div id="err_pass"></div>
                         </div>
                     </div>
                     <div class="control-group">
-                        <label class="control-label" id="form_label">Potrditev gesla:</label>
+                        <label class="control-label" id="form_label">Potrditev gesla:<span class="man_field">**</span></label>
                         <div class="controls">
                         	<input type="password" placeholder="" name="confirm_password" id="v_con_password">
                             <div id="err_con_pass"></div>

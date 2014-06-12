@@ -8,9 +8,10 @@
     
     if($_SERVER['REQUEST_METHOD'] == 'POST'){
         $status = 1;
-        $pageName = $_POST['pageName'];
-        $pageContent = $_POST['pageContent'];
+        $pageName = $_POST['category'];
+        $pageContent = $_POST['description'];
         $insertPage = $manageData->insertPage($pageName,$pageContent,$status);
     }
+	header("Location: ../../mypage.php");
 
 ?>

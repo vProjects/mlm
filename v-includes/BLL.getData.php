@@ -15,6 +15,21 @@
 		function __construct()
 		{	
 			$this->manage_content = new ManageContent_DAL();
+			//checking for all member expiry date
+			$allMembers = $this->manage_content->getValue_where("member_table","*","membership_activation",1);
+			if(!empty($allMembers[0]))
+			{
+				foreach($allMembers as $allMember)
+				{
+					//checking for expiry date
+					$expiry = $this->checkingDate($allMember['expiration_date']);
+					if($expiry == 0)
+					{
+						//update member activation field to 0
+						$terminate_member = $this->manage_content->updateValueWhere("member_table","membership_activation",0,"membership_id",$allMember['membership_id']);
+					}
+				}
+			}
 			return $this->manage_content;
 		}
 		
@@ -160,20 +175,33 @@
 					echo '<div class="row-fluid">
 							<div class="span5">
 								<img src="'.$product[0]['image'].'" class="product_img"/>
-								<div class="row-fluid" style="margin-top:10px;">
-									<div class="span3">
-										<img class="prductSmallImage" src="'.$product[0]['image1'].'" />
-									</div>
-									<div class="span3">
-										<img class="prductSmallImage" src="'.$product[0]['image2'].'" />
-									</div>
-									<div class="span3">
-										<img class="prductSmallImage" src="'.$product[0]['image3'].'"" />
-									</div>
-									<div class="span3">
-										<img class="prductSmallImage" src="'.$product[0]['image4'].'" />
-									</div>
-								</div>
+								<div class="row-fluid" style="margin-top:10px;">';
+								if(!empty($product[0]['image1']))
+								{
+									echo '<div class="span3">
+											<img class="prductSmallImage" src="'.$product[0]['image1'].'" />
+										</div>';
+								}
+								if(!empty($product[0]['image2']))
+								{
+									echo '<div class="span3">
+											<img class="prductSmallImage" src="'.$product[0]['image2'].'" />
+										</div>';
+								}
+								if(!empty($product[0]['image3']))
+								{
+									echo '<div class="span3">
+											<img class="prductSmallImage" src="'.$product[0]['image3'].'" />
+										</div>';
+								}
+								if(!empty($product[0]['image4']))
+								{
+									echo '<div class="span3">
+											<img class="prductSmallImage" src="'.$product[0]['image4'].'" />
+										</div>';
+								}
+									
+							echo '</div>
 							</div>
 							<div class="span6">
 								<h2 class="page_heading">'.$product[0]['product_name'].'</h2>
@@ -218,20 +246,33 @@
 					echo '<div class="row-fluid">
 							<div class="span5">
 								<img src="'.$coupon[0]['image'].'" class="product_img"/>
-								<div class="row-fluid" style="margin-top:10px;">
-									<div class="span3">
-										<img class="prductSmallImage" src="'.$coupon[0]['image1'].'" />
-									</div>
-									<div class="span3">
-										<img class="prductSmallImage" src="'.$coupon[0]['image2'].'" />
-									</div>
-									<div class="span3">
-										<img class="prductSmallImage" src="'.$coupon[0]['image3'].'"" />
-									</div>
-									<div class="span3">
-										<img class="prductSmallImage" src="'.$coupon[0]['image4'].'" />
-									</div>
-								</div>
+								<div class="row-fluid" style="margin-top:10px;">';
+								if(!empty($coupon[0]['image1']))
+								{
+									echo '<div class="span3">
+											<img class="prductSmallImage" src="'.$coupon[0]['image1'].'" />
+										</div>';
+								}
+								if(!empty($coupon[0]['image2']))
+								{
+									echo '<div class="span3">
+											<img class="prductSmallImage" src="'.$coupon[0]['image2'].'" />
+										</div>';
+								}
+								if(!empty($coupon[0]['image3']))
+								{
+									echo '<div class="span3">
+											<img class="prductSmallImage" src="'.$coupon[0]['image3'].'" />
+										</div>';
+								}
+								if(!empty($coupon[0]['image4']))
+								{
+									echo '<div class="span3">
+											<img class="prductSmallImage" src="'.$coupon[0]['image'].'" />
+										</div>';
+								}
+									
+							echo '</div>
 							</div>
 							<div class="span6">
 								<h2 class="page_heading">'.$coupon[0]['coupon_name'].'</h2>
@@ -390,9 +431,18 @@
 		function getSliderContent($id){
 			//checking getting values of slider content
 			$slider = $this->manage_content->getValue_where("slider_content","*","id",$id);
+			//checking the link
+			if(!empty($slider[0]['link']))
+			{
+				$slider_link = $slider[0]['link'];
+			}
+			else
+			{
+				$slider_link = '#';
+			}
 			echo '<img src="'.$slider[0]['image'].'" alt="">
                     <div class="carousel-caption">
-                      <h4>'.$slider[0]['heading'].'</h4>
+                      <h4><a href="'.$slider_link.'" class="slider_anchor">'.$slider[0]['heading'].'</a></h4>
                       <p>'.$slider[0]['description'].'</p>
                     </div>';
 			
@@ -443,18 +493,35 @@
           function login_users($email_Id,$password){
               $passwordRow = $this->manage_content->getValue_where("member_table","*","email_id",$email_Id);
               //checking for membership validiation
-			  if($passwordRow[0]['membership_validiation'] == 1 && $passwordRow[0]['membership_activation'] == 1)
+			  if($password == $passwordRow[0]['password'])
 			  {
-				  if($password == $passwordRow[0]['password']){
+				  /*if($passwordRow[0]['membership_validiation'] == 1 && $passwordRow[0]['membership_activation'] == 1){
 					   return array('success',$passwordRow[0]['membership_id']);
 				  }
 				  else {
-					  return array('failed','incorrect');
+					  return array('failed','invalid',$passwordRow[0]['membership_id']);
+				  }*/
+				  
+				  if($passwordRow[0]['membership_activation'] == 1 && $passwordRow[0]['membership_validiation'] == 1)
+				  {
+					  return array('success',$passwordRow[0]['membership_id']);
+				  }
+				  elseif($passwordRow[0]['membership_activation'] == 1 && $passwordRow[0]['membership_validiation'] == 0)
+				  {
+					  return array('failed','invalid_email',$passwordRow[0]['membership_id']);
+				  }
+				  elseif($passwordRow[0]['membership_activation'] == 0 && $passwordRow[0]['membership_validiation'] == 1)
+				  {
+					  return array('failed','invalid_user',$passwordRow[0]['membership_id']);
+				  }
+				  else
+				  {
+					  return array('failed','invalid_all',$passwordRow[0]['membership_id']);
 				  }
 			  }
 			  else
 			  {
-				  return array('failed','invalid',$passwordRow[0]['membership_id']);
+				  return array('failed','incorrect');
 			  }
             }
 			
@@ -603,7 +670,7 @@
 				{
 					$product = $this->manage_content->getValue_where("coupon_table","*","coupon_id",$val);
 					
-					$cate = $cate.$product[0]['coupon_code']."<br>";
+					$cate = $cate.$product[0]['coupon_name']."<br>";
 				}
 				else
 				{
@@ -679,7 +746,7 @@
 				{
 					$product = $this->manage_content->getValue_where("coupon_table","*","coupon_id",$val);
 					
-					$cate = $cate.$product[0]['coupon_code']."<br>";
+					$cate = $cate.$product[0]['coupon_name']."<br>";
 				}
 				else
 				{
@@ -743,6 +810,24 @@
 			$insertPaymentConf = $this->manage_content->insertPayment($orderId,$totalPrice,$memberid,$product_string);
 			return $result.$insertPaymentConf;
          }
+		 
+		 /* method for inserting values in add money info
+		 	Auth Dipanjan
+		 */
+		 function addMoneyToEWallet($membership_id,$money_id){
+			//current date
+			$curdate = $this->getDate();
+			//creating the column name array
+			$column_name = array("membership_id","money_id","date");
+			//creating table value
+			$values = array($membership_id,$money_id,$curdate);
+			//inserting user values to database user_info table
+			$insert = $this->manage_content->insertValue("addmoney_info",$column_name,$values);
+			
+			$member = $this->manage_content->getValue_where("member_table","*","membership_id",$membership_id);
+			$email_id = $member[0]['email_id'];
+			return array($insert,$email_id,$this->changeDateFormat($curdate));
+		 }
 		 
 		 /*method for inserting values in money transfer log
 		 	Auth Dipanjan
@@ -924,12 +1009,15 @@
 		function getChildElements($membership_id){
 			//fetching values from database
 			$child_id = $this->manage_content->getValue_where("mlm_info","child_id","membership_id",$membership_id);
+			//checking membership validiation of parent member
+			$parent_validiation = $this->manage_content->getValue_where("member_table","*","membership_id",$membership_id);
 			//checking for child element
 			if($child_id[0]['child_id'] != "")
 			{
 				//separating the values and storing in an array
 				$id = explode(",",$child_id[0]['child_id']);
-				foreach($id as $child)
+				$id_reverse = array_reverse($id);
+				foreach($id_reverse as $child)
 				{
 					//getting child membership id
 					$child_membership_id = 
@@ -958,15 +1046,24 @@
 					}
 					//getting child member details from member table
 					$child_member = $this->manage_content->getValue_where("member_table","*","membership_id",$child_membership_id[0]['membership_id']);
-					//checking membership validiation of child members
-					if($child_member[0]['membership_validiation'] == 1 && $child_member[0]['membership_activation'] == 1)
+					//checking membership validiation of parent member
+					if($parent_validiation[0]['membership_validiation'] == 1 && $parent_validiation[0]['membership_activation'] == 1)
 					{
-						$validiate = '';
+						//checking membership validiation of child members
+						if($child_member[0]['membership_validiation'] == 1 && $child_member[0]['membership_activation'] == 1)
+						{
+							$validiate = 'VIP Member';
+						}
+						else
+						{
+							$validiate = '';
+						}
 					}
 					else
 					{
-						$validiate = 'Invalid Member';
+						$validiate = '';
 					}
+						
 					//showing the values in UI layer page
 					echo '<div class="row">  
 							  <div class="span12 mlm-chlid">  
@@ -996,7 +1093,7 @@
 		*/
 		function getPurchaseHistory($membership_id){
 			//fetching values from database
-			$purchases = $this->manage_content->getValue_where("purchase_log","*","membership_id",$membership_id);
+			$purchases = $this->manage_content->getValueWhere_descending("purchase_log","*","membership_id",$membership_id);
 			//checking for empty result
 			if(!empty($purchases[0]))
 			{
@@ -1013,13 +1110,17 @@
 						$payment_status = 'Confirmed';
 					}
 					//checking for delivary status
-					if($purchase['delivery_status'] == 0)
+					if($purchase['delivery_status'] == 1)
 					{
-						$delivery_status = 'Not Delivered';
+						$delivery_status = 'Delivered';
+					}
+					else if($purchase['delivery_status'] == 0 && $purchase_info[0]['payment_request'] == 'Undo')
+					{
+						$delivery_status = 'Product Returned';
 					}
 					else
 					{
-						$delivery_status = 'Delivered';
+						$delivery_status = 'Not Delivered';
 					}
 					//showing them in table
 					echo '<tr>
@@ -1027,7 +1128,7 @@
 							<td>'.$this->anOrderProductList($purchase['order_id']).'</td>
 							<td>'.$this->anOrderQuantityList($purchase['order_id']).'</td>
 							<td>  €'.$purchase['price'].'</td>
-							<td>'.$purchase['date'].'</td>
+							<td>'.$this->changeDateFormat($purchase['date']).'</td>
 							<td>'.$payment_status.'</td>
 							<td>'.$delivery_status.'</td>
 						</tr>';
@@ -1045,7 +1146,7 @@
 		*/
 		function getWithdrawHistory($membership_id){
 			//fetching values from database
-			$withdraws = $this->manage_content->getValue_where("withdraw_log","*","membership_id",$membership_id);
+			$withdraws = $this->manage_content->getValueWhere_descending("withdraw_log","*","membership_id",$membership_id);
 			//checking for empty result
 			if(!empty($withdraws[0]))
 			{
@@ -1071,7 +1172,7 @@
 					//showing them in table
 					echo '<tr>
 							<td>'.$withdraw['withdraw_order_id'].'</td>
-							<td>'.$withdraw['date'].'</td>
+							<td>'.$this->changeDateFormat($withdraw['date']).'</td>
 							<td>'.$frozen_money.'</td>
 							<td>  €'.$withdraw['withdraw_amount'].'</td>
 							<td>'.$confirm.'</td>
@@ -1147,7 +1248,9 @@
 			getting net balence of member
 			Auth: Dipanjan
 		*/
-		function getNetAmount($membership_id){
+		function getNetAmount($membership_id,$total_price){
+			//checking for invalid member or not
+			$member_validity = $this->manage_content->getValue_where("member_table","*","membership_id",$membership_id);
 			//getting all transaction of a member
 			$transaction = $this->manage_content->
 			getValue_twoCoditions("money_transfer_log","*","membership_id",$membership_id,"frozen_money",0);
@@ -1157,6 +1260,7 @@
 			$withdraw_requested_amount = 0;
 			$purchase_by_account = 0;
 			$net_amount = 0;
+			$add_money = 0;
 			if(count($transaction[0]) > 0)
 			{  
 				foreach($transaction as $transactions){
@@ -1194,13 +1298,24 @@
 					}
 				}
 			}
-			if(($total_amount - ($withdraw_requested_amount + $purchase_by_account + $withdraw_amount)) > 20)
+			//calculating add money to ewallet
+			$add_money_details = $this->manage_content->getValue_twoCoditions_descending("addmoney_info","*","membership_id",$membership_id,"status",1);
+			if(!empty($add_money_details[0]))
 			{
-				return ($total_amount - ($withdraw_requested_amount + $purchase_by_account + $withdraw_amount));
+				foreach($add_money_details as $add_money_detail)
+				{
+					$add_money = $add_money + $add_money_detail['amount'];
+				}
+			}
+			//checking for net amount greater than total price or not
+			$wallet_balance = (($total_amount + $add_money) - ($withdraw_requested_amount + $purchase_by_account + $withdraw_amount));
+			if($wallet_balance > $total_price)
+			{
+				return $wallet_balance;
 			}
 			else
 			{
-				return 0;
+				echo 'You have not Sufficient balance!!';
 			}
 			
 		}
@@ -1212,7 +1327,7 @@
 		function getEwalletValue($membership_id){
 			//getting all transaction of a member
 			$transaction = $this->manage_content->
-			getValue_twoCoditions("money_transfer_log","*","membership_id",$membership_id,"frozen_money",0);
+			getValue_twoCoditions_descending("money_transfer_log","*","membership_id",$membership_id,"frozen_money",0);
 			//initialize a variable for serial no calculation
 			$sl_no = 1;
 			//initialize a variable for total amount calculation
@@ -1221,8 +1336,401 @@
 			$withdraw_requested_amount = 0;
 			$purchase_by_account = 0;
 			$net_amount = 0;
+			$add_money = 0;
 			if(count($transaction[0]) > 0)
-			{  
+			{ 
+				foreach($transaction as $transactions){
+					//checking for only debited amount
+					if(!empty($transactions['debit']))
+					{	
+						if(substr($transactions['product_id'],0,1) == 'C')
+						{
+							//fetching the name of product from product table
+							$coupon_details = $this->manage_content->
+							getValue_where("coupon_table","*","coupon_id",$transactions['product_id']);
+							//showing the details of money debited in detail
+							/*echo '<tr>
+									<td>'.$sl_no.'</td>
+									<td>'.$coupon_details[0]['coupon_name'].'</td>
+									<td>'.$transactions['product_quantity'].'</td>
+									<td>'.$this->changeDateFormat($transactions['date']).'</td>
+									<td>  € '.$transactions['debit'].'</td>
+								</tr>';*/
+								
+								// total amount calculation
+								$total_amount = $total_amount + $transactions['debit'];
+								//increment of serial_no variable
+								$sl_no++;
+						}
+						else
+						{
+							//checking for membership product or not
+							if(substr($transactions['product_id'],0,2) == 'M_')
+							{
+								$table_name = 'membership_product';
+							}
+							else
+							{
+								$table_name = 'product_table';
+							}
+							//fetching the name of product from product table
+							$product_details = $this->manage_content->
+							getValue_where($table_name,"*","product_id",$transactions['product_id']);
+							//showing the details of money debited in detail
+							/*echo '<tr>
+									<td>'.$sl_no.'</td>
+									<td>'.$product_details[0]['product_name'].'</td>
+									<td>'.$transactions['product_quantity'].'</td>
+									<td>'.$this->changeDateFormat($transactions['date']).'</td>
+									<td>  € '.$transactions['debit'].'</td>
+								</tr>';*/
+								
+								// total amount calculation
+								$total_amount = $total_amount + $transactions['debit'];
+								//increment of serial_no variable
+								$sl_no++;
+						}
+						
+					}
+				}
+				//getting the withdrawal amount from database
+				$withdraws = $this->manage_content->getValue_twoCoditions("withdraw_log","*","membership_id",$membership_id,"frozen_money",0);
+				//getting the amount withdrawal to that member
+				if(!empty($withdraws[0]))
+				{
+					foreach($withdraws as $withdrawal)
+					{
+						if(substr($withdrawal['withdraw_order_id'],0,8) == 'withdraw')
+						{
+							//checking for status of money transfer
+							if($withdrawal['status'] == 1)
+							{
+								$withdraw_amount = $withdraw_amount + $withdrawal['withdraw_amount'];
+							}
+							//checking for requested amount
+							else
+							{
+								$withdraw_requested_amount = $withdraw_requested_amount + $withdrawal['withdraw_amount'];
+							}
+						}
+						else
+						{
+							$purchase_by_account = $purchase_by_account + $withdrawal['withdraw_amount'];
+						}
+					}
+				}
+			}
+			else
+			{
+				echo "";
+			}
+			//calculating add money to ewallet
+			$add_money_details = $this->manage_content->getValue_twoCoditions_descending("addmoney_info","*","membership_id",$membership_id,"status",1);
+			if(!empty($add_money_details[0]))
+			{
+				foreach($add_money_details as $add_money_detail)
+				{
+					$add_money = $add_money + $add_money_detail['amount'];
+				}
+			}
+			
+			echo '</tbody>';
+
+			//showing total amount in table
+			echo '<tbody>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td class="total_amount"> Gross Amount: </td>
+					<td>  € '.$total_amount.'</td>
+				</tr>';
+			
+			echo  '<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td class="total_amount"> Withdrew Amount: </td>
+					<td>  € '.$withdraw_amount.'</td>
+				</tr>';
+			
+			if(!empty($withdraw_requested_amount))
+			{
+				echo '<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td class="total_amount"> Amount Requested for Withdrawal: </td>
+						<td>  € '.$withdraw_requested_amount.'</td>
+					</tr>';
+			}
+			if(!empty($purchase_by_account))
+			{
+				echo '<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td class="total_amount"> Product Purchase Amount: </td>
+						<td>  € '.$purchase_by_account.'</td>
+					</tr>';
+			}
+			if(!empty($add_money))
+			{
+				echo '<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td class="total_amount"> Add Money To ML Wallet: </td>
+						<td>  € '.$add_money.'</td>
+					</tr>';
+			}
+			if((($total_amount + $add_money) - 
+			($withdraw_requested_amount + $purchase_by_account + $withdraw_amount)) != 0)
+			{
+				echo '<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td class="total_amount"> Net Amount: </td>
+					<td>  € '.(($total_amount + $add_money) - ($withdraw_requested_amount + $purchase_by_account + $withdraw_amount)).'</td>
+				</tr>';
+				return (($total_amount + $add_money) - ($withdraw_requested_amount + $purchase_by_account + $withdraw_amount));
+			}
+			else
+			{
+				echo '<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td class="total_amount"> Net Amount: </td>
+					<td>  € '.(int)(($total_amount + $add_money) - ($withdraw_requested_amount + $purchase_by_account + $withdraw_amount)).'</td>
+				</tr>';
+				return (int)(($total_amount + $add_money) - ($withdraw_requested_amount + $purchase_by_account + $withdraw_amount));
+			}
+			
+		}
+		
+		/*
+			getting ewallet details of member from database table
+			Auth: Dipanjan
+		*/
+		function getEwalletTransaction($membership_id){
+			//getting all transaction of a member
+			$transaction = $this->manage_content->
+			getValue_twoCoditions_descending("money_transfer_log","*","membership_id",$membership_id,"frozen_money",0);
+			//initialize a variable for serial no calculation
+			$sl_no = 1;
+			//initialize a variable for total amount calculation
+			/*$total_amount = 0;
+			$withdraw_amount = 0;
+			$withdraw_requested_amount = 0;
+			$purchase_by_account = 0;
+			$net_amount = 0;
+			$add_money = 0;*/
+			if(count($transaction[0]) > 0)
+			{ 
+				foreach($transaction as $transactions){
+					//checking for only debited amount
+					if(!empty($transactions['debit']) && $sl_no <= 20)
+					{	
+						if(substr($transactions['product_id'],0,1) == 'C')
+						{
+							//fetching the name of product from product table
+							$coupon_details = $this->manage_content->
+							getValue_where("coupon_table","*","coupon_id",$transactions['product_id']);
+							//showing the details of money debited in detail
+							echo '<tr>
+									<td>'.$sl_no.'</td>
+									<td>'.$coupon_details[0]['coupon_name'].'</td>
+									<td>'.$transactions['product_quantity'].'</td>
+									<td>'.$this->changeDateFormat($transactions['date']).'</td>
+									<td>  € '.$transactions['debit'].'</td>
+								</tr>';
+								
+								//increment of serial_no variable
+								$sl_no++;
+								
+						}
+						else
+						{
+							//checking for membership product or not
+							if(substr($transactions['product_id'],0,2) == 'M_')
+							{
+								$table_name = 'membership_product';
+							}
+							else
+							{
+								$table_name = 'product_table';
+							}
+							//fetching the name of product from product table
+							$product_details = $this->manage_content->
+							getValue_where($table_name,"*","product_id",$transactions['product_id']);
+							//showing the details of money debited in detail
+							echo '<tr>
+									<td>'.$sl_no.'</td>
+									<td>'.$product_details[0]['product_name'].'</td>
+									<td>'.$transactions['product_quantity'].'</td>
+									<td>'.$this->changeDateFormat($transactions['date']).'</td>
+									<td>  € '.$transactions['debit'].'</td>
+								</tr>';
+								
+								//increment of serial_no variable
+								$sl_no++;
+						}
+						
+					}
+				}
+				
+			}
+			else
+			{
+				echo "";
+			}
+		}
+		
+		/*
+			getting ewallet details of member from database table where money is frozen money
+			Auth: Dipanjan
+		*/
+		function getEwalletFrozen($membership_id){
+			//getting all transaction of a member
+			$transaction = $this->manage_content->
+			getValue_twoCoditions_descending("money_transfer_log","*","membership_id",$membership_id,"frozen_money",1);
+			//initialize a variable for serial no calculation
+			$sl_no = 1;
+			//initialize a variable for total amount calculation
+			$total_amount = 0;
+			$withdraw_amount = 0;
+			$withdraw_requested_amount = 0;
+			if(count($transaction[0]) > 0)
+			{
+				
+				foreach($transaction as $transactions){
+					//checking for only debited amount
+					if(!empty($transactions['debit']))
+					{	
+						if(substr($transactions['product_id'],0,1) == 'C')
+						{
+							//fetching the name of product from product table
+							$coupon_details = $this->manage_content->
+							getValue_where("coupon_table","*","coupon_id",$transactions['product_id']);
+							//showing the details of money debited in detail
+							/*echo '<tr>
+									<td>'.$sl_no.'</td>
+									<td>'.$coupon_details[0]['coupon_name'].'</td>
+									<td>'.$transactions['product_quantity'].'</td>
+									<td>'.$this->changeDateFormat($transactions['date']).'</td>
+									<td>  € '.$transactions['debit'].'</td>
+								</tr>';*/
+								
+								// total amount calculation
+								$total_amount = $total_amount + $transactions['debit'];
+								//increment of serial_no variable
+								$sl_no++;
+						}
+						else
+						{
+							//checking for membership product or not
+							if(substr($transactions['product_id'],0,2) == 'M_')
+							{
+								$table_name = 'membership_product';
+							}
+							else
+							{
+								$table_name = 'product_table';
+							}
+							//fetching the name of product from product table
+							$product_details = $this->manage_content->
+							getValue_where($table_name,"*","product_id",$transactions['product_id']);
+							//showing the details of money debited in detail
+							/*echo '<tr>
+									<td>'.$sl_no.'</td>
+									<td>'.$product_details[0]['product_name'].'</td>
+									<td>'.$transactions['product_quantity'].'</td>
+									<td>'.$this->changeDateFormat($transactions['date']).'</td>
+									<td>  € '.$transactions['debit'].'</td>
+								</tr>';*/
+								
+								// total amount calculation
+								$total_amount = $total_amount + $transactions['debit'];
+								//increment of serial_no variable
+								$sl_no++;
+						}
+					}
+				}
+				//getting the withdrawal amount from database
+				$withdraws = $this->manage_content->getValue_twoCoditions("withdraw_log","*","membership_id",$membership_id,"frozen_money",1);
+				//getting the amount withdrawal to that member
+				if(!empty($withdraws[0]))
+				{
+					foreach($withdraws as $withdrawal)
+					{
+						//checking for status of money transfer
+						if($withdrawal['status'] == 1)
+						{
+							$withdraw_amount = $withdraw_amount + $withdrawal['withdraw_amount'];
+						}
+						//checking for requested amount
+						else
+						{
+							$withdraw_requested_amount = $withdraw_requested_amount + $withdrawal['withdraw_amount'];
+						}
+					}
+				}
+			}
+			else
+			{
+				echo "";
+			}
+
+			//showing total amount in table
+			echo '<tr>
+					<td class="total_amount"> Gross Amount: </td>
+					<td>  € '.$total_amount.'</td>
+				</tr>
+				<tr>
+					<td class="total_amount"> Withdrew Amount: </td>
+					<td>  € '.$withdraw_amount.'</td>
+				</tr>';
+			if(!empty($withdraw_requested_amount))
+			{
+				echo '<tr>
+					<td class="total_amount"> Amount Requested for Withdrawal: </td>
+					<td>  € '.$withdraw_requested_amount.'</td>
+				</tr>';
+			}
+			if(($total_amount - ($withdraw_requested_amount + $withdraw_amount)) != 0)
+			{
+				echo '<tr>
+					<td class="total_amount"> Net Amount: </td>
+					<td>  € '.($total_amount - ($withdraw_requested_amount + $withdraw_amount)).'</td>
+				</tr>';
+				return ($total_amount - ($withdraw_requested_amount + $withdraw_amount));
+			}
+			else
+			{
+				echo '<tr>
+					<td class="total_amount"> Net Amount: </td>
+					<td>  € '.(int)($total_amount - ($withdraw_requested_amount + $withdraw_amount)).'</td>
+				</tr>';
+				return (int)($total_amount - ($withdraw_requested_amount + $withdraw_amount));
+			}
+			
+		}
+		
+		/*
+		 method for calculating potential money
+		 Auth: Dipanjan
+		*/
+		function getPotentialMoney($membership_id){
+			//getting all transaction of a member
+			$transaction = $this->manage_content->getValue_twoCoditions("money_transfer_log","*","membership_id","potentialMoney","notes",$membership_id); 
+			//initialize a variable for serial no calculation
+			$sl_no = 1;
+			//initialize a variable for total amount calculation
+			$total_amount = 0;
+			if(count($transaction[0]) > 0)
+			{
 				foreach($transaction as $transactions){
 					//checking for only debited amount
 					if(!empty($transactions['debit']))
@@ -1237,7 +1745,7 @@
 									<td>'.$sl_no.'</td>
 									<td>'.$coupon_details[0]['coupon_name'].'</td>
 									<td>'.$transactions['product_quantity'].'</td>
-									<td>'.$transactions['date'].'</td>
+									<td>'.$this->changeDateFormat($transactions['date']).'</td>
 									<td>  € '.$transactions['debit'].'</td>
 								</tr>';
 								
@@ -1265,7 +1773,152 @@
 									<td>'.$sl_no.'</td>
 									<td>'.$product_details[0]['product_name'].'</td>
 									<td>'.$transactions['product_quantity'].'</td>
-									<td>'.$transactions['date'].'</td>
+									<td>'.$this->changeDateFormat($transactions['date']).'</td>
+									<td>  € '.$transactions['debit'].'</td>
+								</tr>';
+								
+								// total amount calculation
+								$total_amount = $total_amount + $transactions['debit'];
+								//increment of serial_no variable
+								$sl_no++;
+						}
+					}
+				}
+			}
+			else
+			{
+				echo '';
+			}
+			
+			//checking from invalid potential money table
+			$invalid_potentials = $this->manage_content->getValue_where("invalid_potential_money","*","membership_id",$membership_id);
+			if(!empty($invalid_potentials[0]))
+			{
+				foreach($invalid_potentials as $invalid_potential)
+				{
+					if(substr($invalid_potential['product_id'],0,1) == 'C')
+					{
+						//fetching the name of product from product table
+						$coupon_details = $this->manage_content->
+						getValue_where("coupon_table","*","coupon_id",$invalid_potential['product_id']);
+						//showing the details of money debited in detail
+						echo '<tr>
+								<td>'.$sl_no.'</td>
+								<td>'.$coupon_details[0]['coupon_name'].'</td>
+								<td>'.$invalid_potential['product_quantity'].'</td>
+								<td>'.$this->changeDateFormat($invalid_potential['date']).'</td>
+								<td>  € '.$invalid_potential['amount'].'</td>
+							</tr>';
+							
+							// total amount calculation
+							$total_amount = $total_amount + $invalid_potential['amount'];
+							//increment of serial_no variable
+							$sl_no++;
+					}
+					else
+					{
+						//checking for membership product or not
+						if(substr($invalid_potential['product_id'],0,2) == 'M_')
+						{
+							$table_name = 'membership_product';
+						}
+						else
+						{
+							$table_name = 'product_table';
+						}
+						//fetching the name of product from product table
+						$product_details = $this->manage_content->
+						getValue_where($table_name,"*","product_id",$invalid_potential['product_id']);
+						//showing the details of money debited in detail
+						echo '<tr>
+								<td>'.$sl_no.'</td>
+								<td>'.$product_details[0]['product_name'].'</td>
+								<td>'.$invalid_potential['product_quantity'].'</td>
+								<td>'.$this->changeDateFormat($invalid_potential['date']).'</td>
+								<td>  € '.$invalid_potential['amount'].'</td>
+							</tr>';
+							
+							// total amount calculation
+							$total_amount = $total_amount + $invalid_potential['amount'];
+							//increment of serial_no variable
+							$sl_no++;
+					}
+				}
+			}
+			
+			//showing total amount in table
+			echo '<tbody>
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td class="total_amount"> Total Amount: </td>
+						<td>  € '.$total_amount.'</td>
+					</tr>';
+		}
+		
+		/*
+			getting ewallet details of member from database table
+			Auth: Dipanjan
+		*/
+		function getMyWalletValue($membership_id){
+			//getting all transaction of a member
+			$transaction = $this->manage_content->
+			getValue_twoCoditions_descending("money_transfer_log","*","membership_id",$membership_id,"frozen_money",0);
+			//initialize a variable for serial no calculation
+			$sl_no = 1;
+			//initialize a variable for total amount calculation
+			$total_amount = 0;
+			$withdraw_amount = 0;
+			$withdraw_requested_amount = 0;
+			$purchase_by_account = 0;
+			$net_amount = 0;
+			$add_money = 0;
+			if(count($transaction[0]) > 0)
+			{ 
+				foreach($transaction as $transactions){
+					//checking for only debited amount
+					if(!empty($transactions['debit']))
+					{	
+						if(substr($transactions['product_id'],0,1) == 'C')
+						{
+							//fetching the name of product from product table
+							$coupon_details = $this->manage_content->
+							getValue_where("coupon_table","*","coupon_id",$transactions['product_id']);
+							//showing the details of money debited in detail
+							echo '<tr>
+									<td>'.$sl_no.'</td>
+									<td>'.$coupon_details[0]['coupon_name'].'</td>
+									<td>'.$transactions['product_quantity'].'</td>
+									<td>'.$this->changeDateFormat($transactions['date']).'</td>
+									<td>  € '.$transactions['debit'].'</td>
+								</tr>';
+								
+								// total amount calculation
+								$total_amount = $total_amount + $transactions['debit'];
+								//increment of serial_no variable
+								$sl_no++;
+						}
+						else
+						{
+							//checking for membership product or not
+							if(substr($transactions['product_id'],0,2) == 'M_')
+							{
+								$table_name = 'membership_product';
+							}
+							else
+							{
+								$table_name = 'product_table';
+							}
+							//fetching the name of product from product table
+							$product_details = $this->manage_content->
+							getValue_where($table_name,"*","product_id",$transactions['product_id']);
+							//showing the details of money debited in detail
+							echo '<tr>
+									<td>'.$sl_no.'</td>
+									<td>'.$product_details[0]['product_name'].'</td>
+									<td>'.$transactions['product_quantity'].'</td>
+									<td>'.$this->changeDateFormat($transactions['date']).'</td>
 									<td>  € '.$transactions['debit'].'</td>
 								</tr>';
 								
@@ -1308,9 +1961,21 @@
 			{
 				echo "";
 			}
+			//calculating add money to ewallet
+			$add_money_details = $this->manage_content->getValue_twoCoditions_descending("addmoney_info","*","membership_id",$membership_id,"status",1);
+			if(!empty($add_money_details[0]))
+			{
+				foreach($add_money_details as $add_money_detail)
+				{
+					$add_money = $add_money + $add_money_detail['amount'];
+				}
+			}
+			
+			echo '</tbody>';
 
 			//showing total amount in table
-			echo '<tr>
+			echo '<tbody>
+				<tr>
 					<td></td>
 					<td></td>
 					<td></td>
@@ -1318,13 +1983,16 @@
 					<td>  € '.$total_amount.'</td>
 				</tr>';
 			
-			echo  '<tr>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td class="total_amount"> Withdrew Amount: </td>
-					<td>  € '.$withdraw_amount.'</td>
-				</tr>';
+			if(!empty($withdraw_amount))
+			{
+				echo  '<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td class="total_amount"> Withdrew Amount: </td>
+						<td>  € '.$withdraw_amount.'</td>
+					</tr>';
+			}
 			
 			if(!empty($withdraw_requested_amount))
 			{
@@ -1346,16 +2014,27 @@
 						<td>  € '.$purchase_by_account.'</td>
 					</tr>';
 			}
-			if(($total_amount - ($withdraw_requested_amount + $purchase_by_account + $withdraw_amount)) != 0)
+			if(!empty($add_money))
+			{
+				echo '<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td class="total_amount"> Add Money To ML Wallet: </td>
+						<td>  € '.$add_money.'</td>
+					</tr>';
+			}
+			if((($total_amount + $add_money) - 
+			($withdraw_requested_amount + $purchase_by_account + $withdraw_amount)) != 0)
 			{
 				echo '<tr>
 					<td></td>
 					<td></td>
 					<td></td>
 					<td class="total_amount"> Net Amount: </td>
-					<td>  € '.($total_amount - ($withdraw_requested_amount + $purchase_by_account + $withdraw_amount)).'</td>
+					<td>  € '.(($total_amount + $add_money) - ($withdraw_requested_amount + $purchase_by_account + $withdraw_amount)).'</td>
 				</tr>';
-				return ($total_amount - ($withdraw_requested_amount + $purchase_by_account + $withdraw_amount));
+				return (($total_amount + $add_money) - ($withdraw_requested_amount + $purchase_by_account + $withdraw_amount));
 			}
 			else
 			{
@@ -1364,157 +2043,13 @@
 					<td></td>
 					<td></td>
 					<td class="total_amount"> Net Amount: </td>
-					<td>  € '.(int)($total_amount - ($withdraw_requested_amount + $purchase_by_account + $withdraw_amount)).'</td>
+					<td>  € '.(int)(($total_amount + $add_money) - ($withdraw_requested_amount + $purchase_by_account + $withdraw_amount)).'</td>
 				</tr>';
-				return (int)($total_amount - ($withdraw_requested_amount + $purchase_by_account + $withdraw_amount));
+				return (int)(($total_amount + $add_money) - ($withdraw_requested_amount + $purchase_by_account + $withdraw_amount));
 			}
 			
 		}
 		
-		/*
-			getting ewallet details of member from database table where money is frozen money
-			Auth: Dipanjan
-		*/
-		function getEwalletFrozen($membership_id){
-			//getting all transaction of a member
-			$transaction = $this->manage_content->
-			getValue_twoCoditions("money_transfer_log","*","membership_id",$membership_id,"frozen_money",1);
-			//initialize a variable for serial no calculation
-			$sl_no = 1;
-			//initialize a variable for total amount calculation
-			$total_amount = 0;
-			$withdraw_amount = 0;
-			$withdraw_requested_amount = 0;
-			if(count($transaction[0]) > 0)
-			{
-				
-				foreach($transaction as $transactions){
-					//checking for only debited amount
-					if(!empty($transactions['debit']))
-					{	
-						if(substr($transactions['product_id'],0,1) == 'C')
-						{
-							//fetching the name of product from product table
-							$coupon_details = $this->manage_content->
-							getValue_where("coupon_table","*","coupon_id",$transactions['product_id']);
-							//showing the details of money debited in detail
-							echo '<tr>
-									<td>'.$sl_no.'</td>
-									<td>'.$coupon_details[0]['coupon_name'].'</td>
-									<td>'.$transactions['product_quantity'].'</td>
-									<td>'.$transactions['date'].'</td>
-									<td>  € '.$transactions['debit'].'</td>
-								</tr>';
-								
-								// total amount calculation
-								$total_amount = $total_amount + $transactions['debit'];
-								//increment of serial_no variable
-								$sl_no++;
-						}
-						else
-						{
-							//checking for membership product or not
-							if(substr($transactions['product_id'],0,2) == 'M_')
-							{
-								$table_name = 'membership_product';
-							}
-							else
-							{
-								$table_name = 'product_table';
-							}
-							//fetching the name of product from product table
-							$product_details = $this->manage_content->
-							getValue_where($table_name,"*","product_id",$transactions['product_id']);
-							//showing the details of money debited in detail
-							echo '<tr>
-									<td>'.$sl_no.'</td>
-									<td>'.$product_details[0]['product_name'].'</td>
-									<td>'.$transactions['product_quantity'].'</td>
-									<td>'.$transactions['date'].'</td>
-									<td>  € '.$transactions['debit'].'</td>
-								</tr>';
-								
-								// total amount calculation
-								$total_amount = $total_amount + $transactions['debit'];
-								//increment of serial_no variable
-								$sl_no++;
-						}
-					}
-				}
-				//getting the withdrawal amount from database
-				$withdraws = $this->manage_content->getValue_twoCoditions("withdraw_log","*","membership_id",$membership_id,"frozen_money",1);
-				//getting the amount withdrawal to that member
-				if(!empty($withdraws[0]))
-				{
-					foreach($withdraws as $withdrawal)
-					{
-						//checking for status of money transfer
-						if($withdrawal['status'] == 1)
-						{
-							$withdraw_amount = $withdraw_amount + $withdrawal['withdraw_amount'];
-						}
-						//checking for requested amount
-						else
-						{
-							$withdraw_requested_amount = $withdraw_requested_amount + $withdrawal['withdraw_amount'];
-						}
-					}
-				}
-			}
-			else
-			{
-				echo "";
-			}
-
-			//showing total amount in table
-			echo '<tr>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td class="total_amount"> Gross Amount: </td>
-					<td>  € '.$total_amount.'</td>
-				</tr>
-				<tr>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td class="total_amount"> Withdrew Amount: </td>
-					<td>  € '.$withdraw_amount.'</td>
-				</tr>';
-			if(!empty($withdraw_requested_amount))
-			{
-				echo '<tr>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td class="total_amount"> Amount Requested for Withdrawal: </td>
-					<td>  € '.$withdraw_requested_amount.'</td>
-				</tr>';
-			}
-			if(($total_amount - ($withdraw_requested_amount + $withdraw_amount)) != 0)
-			{
-				echo '<tr>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td class="total_amount"> Net Amount: </td>
-					<td>  € '.($total_amount - ($withdraw_requested_amount + $withdraw_amount)).'</td>
-				</tr>';
-				return ($total_amount - ($withdraw_requested_amount + $withdraw_amount));
-			}
-			else
-			{
-				echo '<tr>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td class="total_amount"> Net Amount: </td>
-					<td>  € '.(int)($total_amount - ($withdraw_requested_amount + $withdraw_amount)).'</td>
-				</tr>';
-				return (int)($total_amount - ($withdraw_requested_amount + $withdraw_amount));
-			}
-			
-		}
 		
 		/*
 		 method for checking expire date
@@ -1585,6 +2120,16 @@
 		}
 		
 		/*
+		 method for getting coupon category list in left sidebar
+		 Auth: Dipanjan
+		*/
+		function getMemberName($member_id){
+			//getting product category list from database
+			$member = $this->manage_content->getValue_where("member_table","*","membership_id",$member_id);
+			return $member[0]['name'];
+		}
+		
+		/*
 		 method for getting latest product in left sidebar
 		 Auth: Dipanjan
 		*/
@@ -1604,14 +2149,34 @@
 					if($latest['status'] == 1 && $expire_date == 1)
 					{
 						echo '<div class="row-fluid left_container_product">
-								<div class="span3"><img src="'.$latest['image'].'"/></div>
+								<div class="span3"><a href="product.php?product='.$latest['product_id'].'"><img src="'.$latest['image'].'"/></a></div>
 								<div class="span7 offset1">
 									<p><a href="product.php?product='.$latest['product_id'].'">'.$latest['product_name'].'</a></p>
-									<p class="left_container_product_amount"> € '.$latest['price_members'].'</p>
+									<p class="left_container_product_amount"><a href="product.php?product='.$latest['product_id'].'"> € '.$latest['price_members'].'</a></p>
 								</div>
 							</div>';
 					}
 				}
+			}
+		}
+		
+		/*
+		 method for getting custom page element
+		 Auth: Dipanjan
+		*/
+		function getPageElement($id){
+			//checking for latest category in category table
+			$content = $this->manage_content->getValue_where("mypage","*","id",$id);
+			//checking for latest products availability
+			if(!empty($content[0]) && $content[0]['status'] == 1)
+			{
+				echo '<h4 class="left_container_heading"><span class="heading_text">'.$content[0]['name'].'</span></h4>
+					<div class="row-fluid">'.$content[0]['content'].'</div>';
+				
+			}
+			else
+			{
+				'Content Is Empty';
 			}
 		}
 		
@@ -1636,6 +2201,107 @@
 		 method for getting account details of a member
 		 Auth: Dipanjan
 		*/
+		function updatePersonalDetails($membership_id){
+			//getting account details of given membership id
+			$personal_details = $this->manage_content->getValue_where("member_table","*","membership_id",$membership_id);
+			//separating the address values
+			$address1 =  substr($personal_details[0]['address'],0,strpos($personal_details[0]['address'],"<br>"));
+			$address2 = substr($personal_details[0]['address'],strpos($personal_details[0]['address'],"<br>")+4);
+			//showing the details in form
+			echo '<div class="control-group">
+                        <label class="control-label" id="form_label">Polno ime:</label>
+                        <div class="controls">
+                        	<input type="text" placeholder="" name="name" id="v_f_name" 
+							value="'.$personal_details[0]['name'].'">
+                            <div id="err_f_name"></div>
+                        </div>
+                    </div>
+					 <div class="control-group">
+                        <label class="control-label" id="form_label">DOB:</label>
+                        <div class="controls">
+                            <input type="text" placeholder="" name="dob" id="calender_date" value="'.$personal_details[0]['dob'].'">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" id="form_label">Gender:</label>
+                        <div class="controls">
+                            <input type="radio" name="gender" value="male"'; 
+							if($personal_details[0]['gender'] == 'male') { echo 'checked="checked"'; } echo '/> Male
+                            <input type="radio" name="gender" value="female"'; 
+							if($personal_details[0]['gender'] == 'female') { echo 'checked="checked"'; } echo ' /> Female
+                        </div>
+                    </div>
+					<div class="control-group">
+                        <label class="control-label" id="form_label">Kontaktna št:</label>
+                        <div class="controls">
+                        	<input type="text" placeholder="" name="contact_no" id="v_contact_no" 
+							value="'.$personal_details[0]['contact_no'].'">
+                            <div id="err_cntct"></div>
+                        </div>
+                    </div>
+					<div class="control-group">
+                        <label class="control-label" id="form_label">Naslov 1:</label>
+                        <div class="controls">
+                        	<input type="text" placeholder="" name="address1" id="v_address" 
+							value="'.$address1.'">
+                            <div id="err_address"></div>
+                        </div>
+                    </div>
+					<div class="control-group">
+                        <label class="control-label" id="form_label">Naslov 2:</label>
+                        <div class="controls">
+                        	<input type="text" placeholder="" name="address2" 
+							value="'.$address2.'">
+                        </div>
+                    </div>
+					<div class="control-group">
+                        <label class="control-label" id="form_label">Mesto:</label>
+                        <div class="controls">
+                        	<input type="text" placeholder="" name="city" 
+							value="'.$personal_details[0]['city'].'">
+                        </div>
+                    </div>
+					<div class="control-group">
+                        <label class="control-label" id="form_label">Poštna številka:</label>
+                        <div class="controls">
+                        	<input type="text" placeholder="" name="postal_code" 
+							value="'.$personal_details[0]['postal_code'].'">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" id="form_label">Država:</label>
+                        <div class="controls">
+                        	<select name="country_id" id="signup_country">';
+							if(!empty($personal_details[0]['country']))
+							{
+								$this->getCountryList($personal_details[0]['country']);
+							}
+						echo '</select>
+                        </div>
+                    </div>
+					<div class="control-group">
+                        <label class="control-label" id="form_label">Regija/država:</label>
+                        <div class="controls">
+                        	<select name="state_id" id="signup_state">';
+							if(!empty($personal_details[0]['state']))
+							{
+								$this->getStateList($personal_details[0]['state']);
+							}
+						echo '</select>
+                        </div>
+                    </div>
+					<div class="control-group">
+                        <div class="controls">
+                        	<input type="hidden" name="membership_id" value="'.$membership_id.'">
+                            <input type="submit" class="btn btn-inverse btn-large" id="btn_submit" value="PREDLOŽI">
+                        </div>
+                    </div>';
+		}
+		
+		/*
+		 method for getting account details of a member
+		 Auth: Dipanjan
+		*/
 		function getAccountDetails($membership_id){
 			//getting account details of given membership id
 			$account = $this->manage_content->getValue_where("member_account_details","*","membership_id",$membership_id);
@@ -1643,39 +2309,39 @@
 			echo  '<div class="control-group">
                         <label class="control-label" id="form_label">A/C Holder Name:</label>
                         <div class="controls">
-                        	<input type="text" placeholder="Account Holder Name" name="ac_name" id="v-ac_name" 
+                        	<input type="text" placeholder="Account Holder Name" name="ac_name" id="update_ac_name" 
 							value="'.$account[0]['ac_name'].'">
-                            <div id="err_f_name"></div>
+                            <div id="err_update_ac_name"></div>
                         </div>
                     </div>
                     <div class="control-group">
                         <label class="control-label" id="form_label">A/C Number:</label>
                         <div class="controls">
-                        	<input type="text" placeholder="Account Number" name="ac_no" id="v-ac_no" 
+                        	<input type="text" placeholder="Account Number" name="ac_no" id="update_ac_no" 
 							value="'.$account[0]['ac_no'].'">
-                            <div id="err_f_name"></div>
+                            <div id="err_update_ac_no"></div>
                         </div>
                     </div>
                     <div class="control-group">
                         <label class="control-label" id="form_label">Bank Name:</label>
                         <div class="controls">
-                        	<input type="text" placeholder="Bank Name" name="bank" id="v-bank" 
+                        	<input type="text" placeholder="Bank Name" name="bank" id="update_bank" 
 							value="'.$account[0]['bank'].'">
-                            <div id="err_f_name"></div>
+                            <div id="err_update_bank"></div>
                         </div>
                     </div>
                     <div class="control-group">
                         <label class="control-label" id="form_label">Branch Name:</label>
                         <div class="controls">
-                        	<input type="text" placeholder="Branch Name" name="branch" id="v-branch" 
+                        	<input type="text" placeholder="Branch Name" name="branch" id="update_branch" 
 							value="'.$account[0]['branch'].'">
-                            <div id="err_f_name"></div>
+                            <div id="err_update_branch"></div>
                         </div>
                     </div>
                     <div class="control-group">
-                        <label class="control-label" id="form_label">IFSC Code:</label>
+                        <label class="control-label" id="form_label">Tax Number:</label>
                         <div class="controls">
-                        	<input type="text" placeholder="IFSC Code of the Bank" name="ifsc_code" id="v-ifsc_code" 
+                        	<input type="text" placeholder="Tax Number" name="ifsc_code" id="v-ifsc_code" 
 							value="'.$account[0]['ifsc_code'].'">
                             <div id="err_f_name"></div>
                         </div>
@@ -1683,7 +2349,7 @@
                     <div class="control-group">
                         <div class="controls">
                         	<input type="hidden" name="membership_id" value="'.$membership_id.'">
-                            <input type="submit" class="btn btn-inverse btn-large" id="btn_submit" value="UPDATE">
+                            <input type="button" class="btn btn-inverse btn-large" id="btn_submit" value="POSODOBITEV" onclick="validiateUpdateAccountForm()">
                         </div>
                     </div>';
 		}
@@ -1735,6 +2401,362 @@
 			$member = $this->manage_content->getValue_where("member_table","*","membership_id",$membership_id);
 			//fetching the membership invalid conditions
 			return array($member[0]['membership_validiation'],$member[0]['membership_activation']);
+		}
+		
+		/*
+		 method for getting invalid member text
+		 Auth: Dipanjan
+		*/
+		function getInvalidMemberContent($invalid_condition){
+			//getting footer links from database
+			$invalid = $this->manage_content->getValue_where("invalid_member_content","*","id",$invalid_condition);
+			//fetching the membership invalid text
+			echo '<p>'. $invalid[0]['description'].'</p>';
+		}
+		
+		/*
+		 method for getting members a/c details
+		 Auth: Dipanjan
+		*/
+		function getMembersAccountDetails($membership_id){
+			//getting footer links from database
+			$member = $this->manage_content->getValue_where("member_account_details","*","membership_id",$membership_id);
+			//checking for fields are empty or not
+			if(!empty($member[0]['ac_no']) && !empty($member[0]['ac_name']))
+			{
+				return 1;
+			}
+			else
+			{
+				return 0;
+			}
+		}
+		
+		/*
+		 method for getting country list
+		 Auth: Dipanjan
+		*/
+		function getCountryList($country_name){
+			//getting value from database
+			$country_list = $this->manage_content->getValue_where("country","*","status",1);
+			if(!empty($country_list[0]))
+			{
+				foreach($country_list as $country)
+				{
+					if($country['name'] == $country_name)
+					{
+						echo '<option value="'.$country['name'].'" selected="selected">'.$country['name'].'</option>';
+					}
+					else
+					{
+						echo '<option value="'.$country['name'].'">'.$country['name'].'</option>';
+					}
+				}
+			}
+		}
+		
+		/*
+		 method for getting state list
+		 Auth: Dipanjan
+		*/
+		function getStateList($state_name){
+			//getting value from database
+			if(!empty($state_name))
+			{
+				$zone_list = $this->manage_content->getValue_twoCoditions("zone","*","status",1,"name",$state_name);
+			}
+			else
+			{
+				$zone_list = $this->manage_content->getValue_twoCoditions("zone","*","status",1,"country_id",190);
+			}
+			
+			if(!empty($zone_list[0]))
+			{
+				foreach($zone_list as $zone)
+				{
+					echo '<option value="'.$zone['name'].'">'.$zone['name'].'</option>';
+					
+				}
+			}
+		}
+		
+		/*
+		 method for getting state list of given country name
+		 Auth: Dipanjan
+		*/
+		function getStateListOfCountry($country_name){
+			//getting value from database
+			$country_id = $this->manage_content->getValue_where("country","*","name",$country_name);
+			//getting state list
+			$state_list = $this->manage_content->getValue_where("zone","*","country_id",$country_id[0]['country_id']);
+			foreach($state_list as $state)
+			{
+				echo '<option value="'.$state['name'].'">'.$state['name'].'</option>';
+			}
+		}
+		
+		/*
+		 method for modifying date format
+		 Auth: Dipanjan
+		*/
+		function changeDateFormat($input_date){
+			//separating the day month year
+			$date = explode("-",$input_date);
+			//return date as dd-mm-yyyy format
+			$return_date = $date[2]."-".$date[1]."-".$date[0];
+			return $return_date;
+		}
+		
+		/*
+		 method for getting money details for header
+		 Auth: Dipanjan
+		*/
+		function getMoneyDetails($membership_id){
+			//checking for member validiation
+			$member_valid = $this->getInvalidConditions($membership_id);
+			if($member_valid[1] == 0)
+			{
+				/* For My Wallet Money */
+				
+				//getting all transaction of a member
+				$transaction = $this->manage_content->
+				getValue_twoCoditions_descending("money_transfer_log","*","membership_id",$membership_id,"frozen_money",0);
+				
+				//initialize a variable for total amount calculation
+				$total_amount = 0;
+				$withdraw_amount = 0;
+				$withdraw_requested_amount = 0;
+				$purchase_by_account = 0;
+				$net_amount = 0;
+				$add_money = 0;
+				$my_wallet_amount = 0;
+				if(count($transaction[0]) > 0)
+				{ 
+					foreach($transaction as $transactions){
+						//checking for only debited amount
+						if(!empty($transactions['debit']))
+						{
+							// total amount calculation
+							$total_amount = $total_amount + $transactions['debit'];
+						}
+					}
+					//getting the withdrawal amount from database
+					$withdraws = $this->manage_content->getValue_twoCoditions("withdraw_log","*","membership_id",$membership_id,"frozen_money",0);
+					//getting the amount withdrawal to that member
+					if(!empty($withdraws[0]))
+					{
+						foreach($withdraws as $withdrawal)
+						{
+							if(substr($withdrawal['withdraw_order_id'],0,8) == 'withdraw')
+							{
+								//checking for status of money transfer
+								if($withdrawal['status'] == 1)
+								{
+									$withdraw_amount = $withdraw_amount + $withdrawal['withdraw_amount'];
+								}
+								//checking for requested amount
+								else
+								{
+									$withdraw_requested_amount = $withdraw_requested_amount + $withdrawal['withdraw_amount'];
+								}
+							}
+							else
+							{
+								$purchase_by_account = $purchase_by_account + $withdrawal['withdraw_amount'];
+							}
+						}
+					}
+				}
+				//calculating add money to ewallet
+				$add_money_details = $this->manage_content->getValue_twoCoditions_descending("addmoney_info","*","membership_id",$membership_id,"status",1);
+				if(!empty($add_money_details[0]))
+				{
+					foreach($add_money_details as $add_money_detail)
+					{
+						$add_money = $add_money + $add_money_detail['amount'];
+					}
+				}
+				
+				if((($total_amount + $add_money) - 
+				($withdraw_requested_amount + $purchase_by_account + $withdraw_amount)) != 0)
+				{
+					$my_wallet_amount = (($total_amount + $add_money) - ($withdraw_requested_amount + $purchase_by_account + $withdraw_amount));
+				}
+				else
+				{
+					$my_wallet_amount = (int)(($total_amount + $add_money) - ($withdraw_requested_amount + $purchase_by_account + $withdraw_amount));
+				}
+				
+				/* For Potential Money */
+				
+				//getting all transaction of a member
+				$transaction_po = $this->manage_content->getValue_twoCoditions("money_transfer_log","*","membership_id","potentialMoney","notes",$membership_id); 
+				
+				//initialize a variable for total amount calculation
+				$total_po_amount = 0;
+				$potential_money = 0;
+				if(count($transaction_po[0]) > 0)
+				{
+					foreach($transaction_po as $transactions_po){
+						//checking for only debited amount
+						if(!empty($transactions_po['debit']))
+						{	
+							// total amount calculation
+							$total_po_amount = $total_po_amount + $transactions_po['debit'];
+						}
+					}
+				}
+				
+				//checking from invalid potential money table
+				$invalid_potentials = $this->manage_content->getValue_where("invalid_potential_money","*","membership_id",$membership_id);
+				if(!empty($invalid_potentials[0]))
+				{
+					foreach($invalid_potentials as $invalid_potential)
+					{
+						// total amount calculation
+						$total_po_amount = $total_po_amount + $invalid_potential['amount'];
+					}
+				}
+				
+				if($total_po_amount != 0)
+				{
+					$potential_money = $total_po_amount;
+				}
+				else
+				{
+					$potential_money = (int)$total_po_amount;
+				}
+				return array($my_wallet_amount,$potential_money);
+				//echo '€ '.$my_wallet_amount.'/ € '.$potential_money;
+				
+			}
+			else if($member_valid[1] == 1)
+			{
+				/* For My Wallet Money */
+				
+				//getting all transaction of a member
+				$transaction = $this->manage_content->
+				getValue_twoCoditions_descending("money_transfer_log","*","membership_id",$membership_id,"frozen_money",0);
+				
+				//initialize a variable for total amount calculation
+				$total_amount = 0;
+				$withdraw_amount = 0;
+				$withdraw_requested_amount = 0;
+				$purchase_by_account = 0;
+				$net_amount = 0;
+				$add_money = 0;
+				$my_wallet_amount = 0;
+				if(count($transaction[0]) > 0)
+				{ 
+					foreach($transaction as $transactions){
+						//checking for only debited amount
+						if(!empty($transactions['debit']))
+						{
+							// total amount calculation
+							$total_amount = $total_amount + $transactions['debit'];
+						}
+					}
+					//getting the withdrawal amount from database
+					$withdraws = $this->manage_content->getValue_twoCoditions("withdraw_log","*","membership_id",$membership_id,"frozen_money",0);
+					//getting the amount withdrawal to that member
+					if(!empty($withdraws[0]))
+					{
+						foreach($withdraws as $withdrawal)
+						{
+							if(substr($withdrawal['withdraw_order_id'],0,8) == 'withdraw')
+							{
+								//checking for status of money transfer
+								if($withdrawal['status'] == 1)
+								{
+									$withdraw_amount = $withdraw_amount + $withdrawal['withdraw_amount'];
+								}
+								//checking for requested amount
+								else
+								{
+									$withdraw_requested_amount = $withdraw_requested_amount + $withdrawal['withdraw_amount'];
+								}
+							}
+							else
+							{
+								$purchase_by_account = $purchase_by_account + $withdrawal['withdraw_amount'];
+							}
+						}
+					}
+				}
+				//calculating add money to ewallet
+				$add_money_details = $this->manage_content->getValue_twoCoditions_descending("addmoney_info","*","membership_id",$membership_id,"status",1);
+				if(!empty($add_money_details[0]))
+				{
+					foreach($add_money_details as $add_money_detail)
+					{
+						$add_money = $add_money + $add_money_detail['amount'];
+					}
+				}
+				
+				if((($total_amount + $add_money) - 
+				($withdraw_requested_amount + $purchase_by_account + $withdraw_amount)) != 0)
+				{
+					$my_wallet_amount = (($total_amount + $add_money) - ($withdraw_requested_amount + $purchase_by_account + $withdraw_amount));
+				}
+				else
+				{
+					$my_wallet_amount = (int)(($total_amount + $add_money) - ($withdraw_requested_amount + $purchase_by_account + $withdraw_amount));
+				}
+				
+				
+				/* Ewallet frozen money */
+				//getting all transaction of a member
+				$transaction = $this->manage_content->
+				getValue_twoCoditions_descending("money_transfer_log","*","membership_id",$membership_id,"frozen_money",1);
+				
+				//initialize a variable for total amount calculation
+				$vip_total_amount = 0;
+				$vip_withdraw_amount = 0;
+				$vip_withdraw_requested_amount = 0;
+				$vip_total_frozen_money = 0;
+				if(count($transaction[0]) > 0)
+				{
+					
+					foreach($transaction as $transactions){
+						//checking for only debited amount
+						if(!empty($transactions['debit']))
+						{	
+							// total amount calculation
+							$vip_total_amount = $vip_total_amount + $transactions['debit'];
+						}
+					}
+					//getting the withdrawal amount from database
+					$withdraws = $this->manage_content->getValue_twoCoditions("withdraw_log","*","membership_id",$membership_id,"frozen_money",1);
+					//getting the amount withdrawal to that member
+					if(!empty($withdraws[0]))
+					{
+						foreach($withdraws as $withdrawal)
+						{
+							//checking for status of money transfer
+							if($withdrawal['status'] == 1)
+							{
+								$vip_withdraw_amount = $vip_withdraw_amount + $withdrawal['withdraw_amount'];
+							}
+							//checking for requested amount
+							else
+							{
+								$vip_withdraw_requested_amount = $vip_withdraw_requested_amount + $withdrawal['withdraw_amount'];
+							}
+						}
+					}
+				}
+				
+				if(($vip_total_amount - ($vip_withdraw_requested_amount + $vip_withdraw_amount)) != 0)
+				{
+					$vip_total_frozen_money = ($vip_total_amount - ($vip_withdraw_requested_amount + $vip_withdraw_amount));
+				}
+				else
+				{
+					$vip_total_frozen_money = (int)($vip_total_amount - ($vip_withdraw_requested_amount + $vip_withdraw_amount));
+				}
+				return array($my_wallet_amount,$vip_total_frozen_money);
+				//echo '€ '.$my_wallet_amount.'/ € '.$total_frozen_money;
+			}
 		}
 	
 	}

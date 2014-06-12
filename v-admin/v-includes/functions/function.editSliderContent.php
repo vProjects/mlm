@@ -10,10 +10,13 @@
 	if($_SERVER['REQUEST_METHOD'] == 'POST')
 	{
 		$heading1 = $_POST['heading1'];
+		$link1 = $_POST['link1'];
 		$description1 = $_POST['description1'];
 		$heading2 = $_POST['heading2'];
+		$link2 = $_POST['link2'];
 		$description2 = $_POST['description2'];
 		$heading3 = $_POST['heading3'];
+		$link3 = $_POST['link3'];
 		$description3 = $_POST['description3'];
 		$photo1 = $_FILES['photo1']['name'];
 		$photo2 = $_FILES['photo2']['name'];
@@ -60,6 +63,11 @@
 		$result = $manageData->updateValueWhere("slider_content","heading",$heading1,"id",1);	
 	}
 	
+	if(isset($link1))
+	{
+		$result = $manageData->updateValueWhere("slider_content","link",$link1,"id",1);	
+	}
+	
 	if(isset($description1))
 	{
 		$result = $manageData->updateValueWhere("slider_content","description",$description1,"id",1);	
@@ -75,6 +83,11 @@
 		$result = $manageData->updateValueWhere("slider_content","heading",$heading2,"id",2);	
 	}
 	
+	if(isset($link2))
+	{
+		$result = $manageData->updateValueWhere("slider_content","link",$link2,"id",2);	
+	}
+	
 	if(isset($description2))
 	{
 		$result = $manageData->updateValueWhere("slider_content","description",$description2,"id",2);	
@@ -88,6 +101,11 @@
 	if(isset($heading3))
 	{
 		$result = $manageData->updateValueWhere("slider_content","heading",$heading3,"id",3);	
+	}
+	
+	if(isset($link3))
+	{
+		$result = $manageData->updateValueWhere("slider_content","link",$link3,"id",3);	
 	}
 	
 	if(isset($description3))

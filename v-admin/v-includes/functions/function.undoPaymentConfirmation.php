@@ -9,6 +9,7 @@
 	{
 		//calling method for undo payment confirmation
 		$result = $manageData->updateValueWhere("purchase_info","payment_request","Undo","order_id",$order_id);
+		$delilvery_status = $manageData->updateValueWhere("purchase_log","delivery_status",0,"order_id",$order_id);
 	}
 	header("Location: ../../finalConfirmationPayment.php");
 ?>

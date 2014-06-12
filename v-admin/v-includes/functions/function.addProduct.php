@@ -15,6 +15,7 @@
 		$old_price = $_POST['old_price'];
 		$price_guest = $_POST['price_guest'];
 		$price_members = $_POST['price_members'];
+		$tax = $_POST['tax'];
 		$discount = $_POST['discount'];
 		$stock = $_POST['stock'];
 		$expiration_date = $_POST['expiration_date'];
@@ -126,11 +127,15 @@
 	if(!empty($discount))
 	{
 		//insert values in product table
-		$result = $manageData->insertProduct($product_id,$category_string,$product_name,$description,$references,$old_price,$price_guest,$price_members,$discount,$stock,$date,$expiration_date,$maxpick,$status,$photo_name,$photo_name1,$photo_name2,$photo_name3,$photo_name4);
+		$result = $manageData->insertProduct($product_id,$category_string,$product_name,$description,$references,$old_price,$price_guest,$price_members,$tax,$discount,$stock,$date,$expiration_date,$maxpick,$status,$photo_name,$photo_name1,$photo_name2,$photo_name3,$photo_name4);
 		
 		if($result == 1)
 		{
 			header("Location: ../../addProduct.php?msg=1111");
+		}
+		else if($result == 0)
+		{
+			header("Location: ../../addProduct.php?msg=7777");
 		}
 	}
 	else

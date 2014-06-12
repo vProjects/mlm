@@ -4,7 +4,7 @@ class Mail{
 		/*
 		*  The basic message which we will send to the user after signup
 		*/
- 		private $activationMessage = 'Thanks for joining MojoLife and please click on the link to activate your account ';
+ 		private $activationMessage = 'Thanks for joining MojLife and please click on the link to activate your account ';
 		
 		/*
          * top domail url for activation.php
@@ -26,7 +26,7 @@ class Mail{
 		*  Message which will be send to the user
 		*/
 		
-		private $subject = 'Thanks for Joining MojoLife';
+		private $subject = 'Thanks for Joining MojLife';
 		
 
 
@@ -67,9 +67,9 @@ class Mail{
 		
 		function mailPassword($to,$password){
 		    
-			$msg = "Your Password For Mojolife Account is: ".$password;
+			$msg = "Your Password For Mojlife Account is: ".$password;
 			
-			$subject = "!Important Mail From Mojolife";
+			$subject = "!Important Mail From Mojlife";
 			
 			$headers = "From: sales@mojlife.com" . "\r\n";
 
@@ -166,8 +166,8 @@ class Mail{
 							<td style="border:1px solid;">SI56 10100 00483 99988</td>
 						</tr>
 						<tr>
-							<td style="border:1px solid;">Referenčna številka:</td>
-							<td style="border:1px solid;"><b>RF 99 '.substr($order_id,6).'</b></td>
+							<td style="border:1px solid;">Referenčna številka-RF 99 :</td>
+							<td style="border:1px solid;"><b>'.substr($order_id,6).'</b></td>
 						</tr>
 						<tr>
 							<td style="border:1px solid;">Cena:</td>
@@ -200,9 +200,11 @@ class Mail{
 		/*
 			Function to send confirmation of order to the customer with the details
 		*/	
-		function confirmationOfOrderAccount($to,$order_id,$product_list,$quantity,$price){
+		function confirmationOfOrderAccount($to,$order_id,$message_details,$amount_details,$invoice_no,$invoice_date){
 			$message = '<p><img src="mojlife.com/img/logo.png"></p>
-						<h3 style="color:#0080FF">Potrdilo naročila</h3>
+						<h3><span style="color:#0080FF">Račun: </span>'.$invoice_no.'</h3>
+						<h3><span style="color:#0080FF">Datum: </span>'.$invoice_date.'</h3>
+						<h3><span style="color:#0080FF">ID naročila: </span>'.$order_id.'</h3>
 						<p>Vaše naročilo smo obravnavali uspešno. </p>
 						<p>Hvala za naročilo.</p>
 						<p>Vaše naročilo: </p>
@@ -210,20 +212,19 @@ class Mail{
 						<table style="width:100%; border:1px solid;">
 							<thead>
 								<tr style="background-color:#E9E9E9;">
-									<th style="border:1px solid;">Product List</th>
-									<th style="border:1px solid;">Quantity</th>
-									<th style="border:1px solid;">Total Amount</th>
+									<th style="border:1px solid;">Naročilo</th>
+									<th style="border:1px solid;">Količina</th>
+									<th style="border:1px solid;">DDV</th>
+									<th style="border:1px solid;">Cena brez DDV</th>
+									<th style="border:1px solid;">Cena z DDV</th>
 								</tr>
 							</thead>
 							<tbody>
-								<tr>
-									<td style="border:1px solid;">'.$product_list.'</td>
-									<td style="border:1px solid;">'.$quantity.'</td>
-									<td style="border:1px solid;"> € '.$price.'</td>
-								</tr>
+								'.$message_details.$amount_details.'
 							</tbody>
 						</table>
 						
+						<p><br>Za uporabo oz. vnovčitev naročila morate obvezno predložiti: DATUM in številko ID NAROČILA! Več o naročilih najdete na spletni strani <a href="www.mojlife.com">www.MojLife.com</a></br></p>
 						<p>Za pomoč smo vam na voljo na tel.: + 386 51 358 868 ali <a href="#">order@mojlife.si</a></p>
 						<p>Lep pozdrav,</p>
 						<p>MOJLIFE</p>';
@@ -248,9 +249,11 @@ class Mail{
 		/*
 			Function to send confirmation of order to the customer with the details
 		*/	
-		function confirmationOfOrderPaypal($to,$order_id,$product_list,$quantity,$price){
+		function confirmationOfOrderPaypal($to,$order_id,$message_details,$amount_details,$invoice_no,$invoice_date){
 			$message = '<p><img src="mojlife.com/img/logo.png"></p>
-						<h3 style="color:#0080FF">Potrdilo naročila</h3>
+						<h3><span style="color:#0080FF">Račun: </span>'.$invoice_no.'</h3>
+						<h3><span style="color:#0080FF">Datum: </span>'.$invoice_date.'</h3>
+						<h3><span style="color:#0080FF">ID naročila: </span>'.$order_id.'</h3>
 						<p>Vaše naročilo smo obravnavali uspešno. </p>
 						<p>Hvala za naročilo.</p>
 						<p>Vaše naročilo: </p>
@@ -258,25 +261,116 @@ class Mail{
 						<table style="width:100%; border:1px solid;">
 							<thead>
 								<tr style="background-color:#E9E9E9;">
-									<th style="border:1px solid;">Product List</th>
-									<th style="border:1px solid;">Quantity</th>
-									<th style="border:1px solid;">Total Amount</th>
+									<th style="border:1px solid;">Naročilo</th>
+									<th style="border:1px solid;">Količina</th>
+									<th style="border:1px solid;">DDV</th>
+									<th style="border:1px solid;">Cena brez DDV</th>
+									<th style="border:1px solid;">Cena z DDV</th>
 								</tr>
 							</thead>
 							<tbody>
-								<tr>
-									<td style="border:1px solid;">'.$product_list.'</td>
-									<td style="border:1px solid;">'.$quantity.'</td>
-									<td style="border:1px solid;"> € '.$price.'</td>
-								</tr>
+								'.$message_details.$amount_details.'
 							</tbody>
 						</table>
 						
+						<p><br>Za uporabo oz. vnovčitev naročila morate obvezno predložiti: DATUM in številko ID NAROČILA! Več o naročilih najdete na spletni strani <a href="www.mojlife.com">www.MojLife.com</a></br></p>
 						<p>Za pomoč smo vam na voljo na tel.: + 386 51 358 868 ali <a href="#">order@mojlife.si</a></p>
 						<p>Lep pozdrav,</p>
 						<p>MOJLIFE</p>';
 			
 			$sub = 'Confirmation of Order From mojlife.com';
+			$headers = "From: sales@mojlife.com"."\r\n";
+			
+			$headers .= "MIME-Version: 1.0\r\n";
+			$headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
+			
+			$retval = mail($to,$sub,$message,$headers);
+			if($retval == 1 )  
+			{
+				return 'mailsent';
+			}
+			else
+			{
+				return "Message could not be sent";
+			}
+		}
+		
+		/*
+			Function to send money id for ewallet add money
+		*/	
+		function addMoneyMail($to,$date,$money_id){
+			$message = '<p><img src="mojlife.com/img/logo.png"></p>
+						<h3><span style="color:#0080FF">Datum: </span>'.$date.'</h3>
+						<h3><span style="color:#0080FF">Money ID: </span>'.$money_id.'</h3>
+						<p>Vaše naročilo smo obravnavali uspešno. </p>
+						<p>Hvala za naročilo.</p>
+						
+						<p><br>Za uporabo oz. vnovčitev naročila morate obvezno predložiti: DATUM in številko ID NAROČILA! Več o naročilih najdete na spletni strani <a href="www.mojlife.com">www.MojLife.com</a></br></p>
+						<p>Za pomoč smo vam na voljo na tel.: + 386 51 358 868 ali <a href="#">order@mojlife.si</a></p>
+						<p>Lep pozdrav,</p>
+						<p>MOJLIFE</p>';
+			
+			$sub = 'Information of adding money To EWallet From mojlife.com';
+			$headers = "From: sales@mojlife.com"."\r\n";
+			
+			$headers .= "MIME-Version: 1.0\r\n";
+			$headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
+			
+			$retval = mail($to,$sub,$message,$headers);
+			if($retval == 1 )  
+			{
+				return 'mailsent';
+			}
+			else
+			{
+				return "Message could not be sent";
+			}
+		}
+		
+		/*
+			Function to send money id for ewallet add money through bank transaction
+		*/	
+		function addMoneyToBankMail($to,$date,$money_id){
+			$message = '<p><img src="mojlife.com/img/logo.png"></p>
+						<h3><span style="color:#0080FF">Datum: </span>'.$date.'</h3>
+						<h3><span style="color:#0080FF">Money ID: </span>'.$money_id.'</h3>
+						<p>Vaše naročilo smo obravnavali uspešno. </p>
+						<p>Hvala za naročilo.</p>
+						
+						<p><br>Za uporabo oz. vnovčitev naročila morate obvezno predložiti: DATUM in številko ID NAROČILA! Več o naročilih najdete na spletni strani <a href="www.mojlife.com">www.MojLife.com</a></br></p>
+						<p>Za pomoč smo vam na voljo na tel.: + 386 51 358 868 ali <a href="#">order@mojlife.si</a></p>
+						<p>Lep pozdrav,</p>
+						<p>MOJLIFE</p>
+						<p style="font-weight:bold;font-size:18px;">Plačilni nalog UPN</p>
+						<p>Izbrali ste plačilo po plačilnem nalogu UPN. Spodaj so podatki, kam je potrebno izvesti plačilo, ki ga morate pravilno izpolniti prek vaše spletne banke ali neposredno na banki ali pošti.</p>
+				
+						<table style="width:100%; border:1px solid; text-align:center;">
+							<caption style="border:1px solid; font-size:20px;">Prejemnik MojLife</caption>
+							<tbody>
+								<tr>
+									<td style="border:1px solid;">Naziv:</td>
+									<td style="border:1px solid;">DASE d.o.o.</td>
+								</tr>
+								<tr>
+									<td style="border:1px solid;">Naslov:</td>
+									<td style="border:1px solid;">Ulica Hermana Potočnika 41</td>
+								</tr>
+								<tr>
+									<td style="border:1px solid;">Kraj:</td>
+									<td style="border:1px solid;">1000 Ljubljana</td>
+								</tr>
+								<tr>
+									<td style="border:1px solid;">Država:</td>
+									<td style="border:1px solid;">Slovenija</td>
+								</tr>
+								<tr>
+									<td style="border:1px solid;">IBAN / TRR:</td>
+									<td style="border:1px solid;">SI56 10100 00483 99988</td>
+								</tr>
+							</tbody>
+						</table>';
+			
+			$sub = 'Information of adding money To EWallet From mojlife.com';
 			$headers = "From: sales@mojlife.com"."\r\n";
 			
 			$headers .= "MIME-Version: 1.0\r\n";

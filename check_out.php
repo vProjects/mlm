@@ -27,7 +27,7 @@
         <!--- rightcontainer starts here --->
         <div class="span9">
         	<div class="row-fluid">
-        		<h2 class="page_heading">Checkout</h2>
+        		<h2 class="page_heading">Blagajna</h2>
             </div>
             <div class="row-fluid">
             	<div class="accordion" id="accordion2">
@@ -184,7 +184,7 @@
                             	print_r
                             	(' <label class="radio check_out_radio">
 		                              <input type="radio" name="wayofpayment" id="" value="myaccount">
-		                               Plačajte s by my MLM balance
+		                               Plačajte iz ML denarnice
 		                            </label>
 		                         ');
                               
@@ -238,10 +238,10 @@
 								?>
                               </tbody>
                           </table>
-                          <div id="userid" style="display: none;"><?php if(isset($_SESSION['memberId'])){ echo $_SESSION['memberId']; } else echo $_SESSION['guestId']; ?></div>
-                          <div id="totalProductprice" style="display: none;"><?php echo $getProductAmount ?></div>
-                          <input type="button" href="" class="btn btn-inverse pull-right" id="checkoutdone" value="Confirm">
-                          <input type="button" href="" class="btn btn-inverse pull-right" id="checkoutdonebymyaccount" value="Confirm">
+                          <input type="hidden" id="userid" value="<?php if(isset($_SESSION['memberId'])){ echo $_SESSION['memberId']; } else echo $_SESSION['guestId']; ?>"  />
+                          <input type="hidden" id="totalProductprice" value="<?php echo $getProductAmount ?>" />
+                          <input type="button" href="" class="btn btn-inverse pull-right" id="checkoutdone" value="POTRDI" style="display:none;">
+                          <input type="button" href="" class="btn btn-inverse pull-right" id="checkoutdonebymyaccount" value="POTRDI" style="display:none;">
                           
                           
                           <div class="clearfix"></div>
@@ -275,6 +275,17 @@
         <!--- rightcontainer ends here --->
     </div>
     <!--- body ends here --->
+
+<script>
+	// at the time of page load this codes takes the value of the total price at this page and then stores for future use
+    var price = document.getElementById('paypal_amount').value;
+    
+    $( "#paypalform" ).submit(function( event ) {
+        document.getElementById('paypal_amount').value = price;
+    });
+
+</script>
+
 
 <?php
 	//include footer

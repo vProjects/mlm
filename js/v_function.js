@@ -115,6 +115,27 @@ function validateForm(form_name)
 	//submit the contact form
 	document.getElementById(form_name).submit();
 }
+
+function validiateAccountInformation(form_name)
+{
+	validateRequiredField('v-ac_name','err_v-ac_name');
+	validateRequiredField('v-ac_no','err_v-ac_no');
+	validateRequiredField('v-bank','err_v-bank');
+	validateRequiredField('v-branch','err_v-branch');
+	//submit the contact form
+	document.getElementById(form_name).submit();
+}
+
+function validiateUpdateAccountForm()
+{
+	validateRequiredField('update_ac_name','err_update_ac_name');
+	validateRequiredField('update_ac_no','err_update_ac_no');
+	validateRequiredField('update_bank','err_update_bank');
+	validateRequiredField('update_branch','err_update_branch');
+	//submit the contact form
+	document.getElementById('updateAccountForm').submit();
+}
+
 // validiation of checkout form
 function validiateCheckoutForm()
 {
@@ -122,3 +143,17 @@ function validiateCheckoutForm()
 	var return_value = checkResultEmail('v-checkoutEmail');
 	return return_value;
 }
+
+
+$(document).ready(function(e) {
+    $('#payment_account').click(function(e) {
+        $('#addMoneyToPaypal').css('display','none');
+		$('#addMoneyToBank').css('display','block');
+    });
+	
+	$('#payment_paypal').click(function(e) {
+        $('#addMoneyToBank').css('display','none');
+		$('#addMoneyToPaypal').css('display','block');
+    });
+	
+});

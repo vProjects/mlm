@@ -32,6 +32,7 @@
 								<td> €'.$product['old_price'].'</td>
 								<td> €'.$product['price_guest'].'</td>
 								<td> €'.$product['price_members'].'</td>
+								<td>'.$product['tax'].'</td>
 								<td>'.$product['discount'].'</td>
 								<td>'.$product['stock'].'</td>
 								<td>'.$product['expiration_date'].'</td>
@@ -84,6 +85,7 @@
 								<td> €'.$coupon['old_price'].'</td>
 								<td> €'.$coupon['price_guest'].'</td>
 								<td> €'.$coupon['price_members'].'</td>
+								<td>'.$coupon['tax'].'</td>
 								<td>'.$coupon['discount'].'</td>
 								<td>'.$coupon['stock'].'</td>
 								<td>'.$coupon['expiration_date'].'</td>
@@ -158,6 +160,10 @@
                     <input type="text" placeholder="Price for Members" class="textbox1" name="price_members" value="'.$products[0]['price_members'].'"/>
                 </div>
                 <div class="form-control v-form">
+                	<label class="control-label">Tax:</label>
+                    <input type="text" placeholder="Tax" class="textbox1" name="tax" value="'.$products[0]['tax'].'"/>
+                </div>
+				<div class="form-control v-form">
                 	<label class="control-label">Discount Rate:</label>
                     <input type="text" placeholder="Discount" class="textbox1" name="discount" value="'.$products[0]['discount'].'"/>
                 </div>
@@ -249,6 +255,10 @@
                     <input type="text" placeholder="Price for Members" class="textbox1" name="price_members" value="'.$coupons[0]['price_members'].'"/>
                 </div>
                 <div class="form-control v-form">
+                	<label class="control-label">Tax:</label>
+                    <input type="text" placeholder="Tax" class="textbox1" name="tax" value="'.$coupons[0]['tax'].'"/>
+                </div>
+				<div class="form-control v-form">
                 	<label class="control-label">Discount Rate:</label>
                     <input type="text" placeholder="Discount" class="textbox1" name="discount" value="'.$coupons[0]['discount'].'"/>
                 </div>
@@ -390,6 +400,10 @@
 				<div class="form-control v-form">
                 	<label class="control-label">1st Slider Heading:</label>
                     <input type="text" placeholder="1st Slider Heading" class="textbox1" name="heading1" value="'.$slider_content[0]['heading'].'"/>
+				</div>
+				<div class="form-control v-form">
+                	<label class="control-label">1st Slider Link:</label>
+                    <input type="text" placeholder="1st Slider Link" class="textbox1" name="link1" value="'.$slider_content[0]['link'].'"/>
 				</div>	
 				<div class="form-control v-form">
                 	<label class="control-label">1st Slider Description:</label>
@@ -404,6 +418,10 @@
                     <input type="text" placeholder="2nd Slider Heading" class="textbox1" name="heading2" value="'.$slider_content[1]['heading'].'"/>
 				</div>	
 				<div class="form-control v-form">
+                	<label class="control-label">2nd Slider Link:</label>
+                    <input type="text" placeholder="2nd Slider Link" class="textbox1" name="link2" value="'.$slider_content[1]['link'].'"/>
+				</div>
+				<div class="form-control v-form">
                 	<label class="control-label">2nd Slider Description:</label>
                     <textarea class="textbox1 textarea" name="description2">'.$slider_content[1]['description'].'</textarea> 
 				</div>
@@ -414,6 +432,10 @@
 				<div class="form-control v-form">
                 	<label class="control-label">3rd Slider Heading:</label>
                     <input type="text" placeholder="3rd Slider Heading" class="textbox1" name="heading3" value="'.$slider_content[2]['heading'].'"/>
+				</div>
+				<div class="form-control v-form">
+                	<label class="control-label">3rd Slider Link:</label>
+                    <input type="text" placeholder="3rd Slider Link" class="textbox1" name="link3" value="'.$slider_content[2]['link'].'"/>
 				</div>	
 				<div class="form-control v-form">
                 	<label class="control-label">3rd Slider Description:</label>
@@ -421,6 +443,60 @@
 				</div>
                 <div class="form-control v-form">
                 	<div class="function_result"></div>
+                	<input type="submit" value="UPDATE" class="btn btn-large btn-inverse btn1" />
+                    <div class="clearfix"></div>
+                </div>';
+		
+		}
+		
+		/*
+			method for getting invalid member content
+			Auth: Dipanjan
+		*/
+		function getInvalidMemberContent(){
+			//fetching values from database
+			$slider_content = $this->manageContent->getValueWhere("invalid_member_content","*","id",1);
+			//showing the values in ui layer form
+			echo '<h5>For Email Verificaation</h5>	
+				<div class="form-control v-form">
+                	<label class="control-label">Description</label><br><br>
+                    <textarea type="text" id="editor1" placeholder="Description" class="textbox1 textarea" name="description1">'.$slider_content[0]['description'].'</textarea>
+                </div>';
+			//fetching values from database
+			$slider_content = $this->manageContent->getValueWhere("invalid_member_content","*","id",2);
+			//showing the values in ui layer form
+			echo '<h5>For Membership Product</h5>	
+				<div class="form-control v-form">
+                	<label class="control-label">Description</label><br><br>
+                    <textarea type="text" id="editor2" placeholder="Description" class="textbox1 textarea" name="description2">'.$slider_content[0]['description'].'</textarea>
+                </div>
+				<div class="form-control v-form">
+                	<div class="function_result"></div>
+                	<input type="submit" value="UPDATE" class="btn btn-large btn-inverse btn1" />
+                    <div class="clearfix"></div>
+                </div>';
+		
+		}
+		
+		/*
+			method for getting slider content
+			Auth: Dipanjan
+		*/
+		function getAnFooterLink($footer_id){
+			//fetching values from database
+			$footer_link = $this->manageContent->getValueWhere("footer_content","*","id",$footer_id);
+			//showing the values in ui layer form
+			echo '<div class="form-control v-form">
+                	<label class="control-label">Name:</label>
+                    <input type="text" placeholder="Footer Link Name" class="textbox1" name="name" value="'.$footer_link[0]['name'].'"/>
+                </div>	
+				<div class="form-control v-form">
+                	<label class="control-label">Link:</label>
+                    <input type="text" placeholder="Footer Link" class="textbox1" name="link" value="'.$footer_link[0]['link'].'"/>
+                </div>
+                <div class="form-control v-form">
+                	<div class="function_result"></div>
+					<input type="hidden" name="id" value="'.$footer_link[0]['id'].'"/>
                 	<input type="submit" value="UPDATE" class="btn btn-large btn-inverse btn1" />
                     <div class="clearfix"></div>
                 </div>';
@@ -567,10 +643,12 @@
 						if($member['membership_validiation'] == 1 && $member['membership_activation'] == 1)
 						{
 							$membership_validiation = 'Valid';
+							$addMoneyButton = '<a href="v-includes/functions/function.addMoneyEwallet.php?member_id='.$member['membership_id'].'"><button class="btn btn-success"> <span class="icon-pencil"></span>&nbsp;&nbsp;Add Money</button></a>';
 						}
 						else
 						{
 							$membership_validiation = 'Invalid';
+							$addMoneyButton = '<a href="v-includes/functions/function.addMoneyEwallet.php?member_id='.$member['membership_id'].'"><button class="btn btn-success"> <span class="icon-pencil"></span>&nbsp;&nbsp;Add Money</button></a>';
 						}
 						echo '<tr>
 								<td>'.$member['membership_id'].'</td>
@@ -589,7 +667,12 @@
 								<td>
 									<a href="memberEwalletDetails.php?m_id='.$member['membership_id'].'"><button class="btn btn-danger"> <span class="icon-pencil"></span>&nbsp;&nbsp;Ewallet Details</button></a>
 								</td>
+								<td>
+									<a href="treeStructure.php?member_id='.$member['membership_id'].'"><button class="btn btn-warning"> <span class="icon-pencil"></span>&nbsp;&nbsp;MLM Structure</button></a>
+								</td>
+								<td>'.$addMoneyButton.'</td>
 							</tr>';
+							
 					}
 				}
 				else
@@ -607,13 +690,15 @@
 					foreach($members as $member)
 					{
 						//checking for membership validiation
-						if($member['membership_validiation'] == 1)
+						if($member['membership_validiation'] == 1 && $member['membership_activation'] == 1)
 						{
 							$membership_validiation = 'Valid';
+							$addMoneyButton = '<a href="v-includes/functions/function.addMoneyEwallet.php?member_id='.$member['membership_id'].'"><button class="btn btn-success"> <span class="icon-pencil"></span>&nbsp;&nbsp;Add Money</button></a>';
 						}
 						else
 						{
 							$membership_validiation = 'Invalid';
+							$addMoneyButton = '<a href="v-includes/functions/function.addMoneyEwallet.php?member_id='.$member['membership_id'].'"><button class="btn btn-success"> <span class="icon-pencil"></span>&nbsp;&nbsp;Add Money</button></a>';
 						}
 						echo '<tbody>
 								<tr>
@@ -633,6 +718,10 @@
 									<td>
 										<a href="memberEwalletDetails.php?m_id='.$member['membership_id'].'"><button class="btn btn-danger"> <span class="icon-pencil"></span>&nbsp;&nbsp;Ewallet Details</button></a>
 									</td>
+									<td>
+										<a href="treeStructure.php?member_id='.$member['membership_id'].'"><button class="btn btn-warning"> <span class="icon-pencil"></span>&nbsp;&nbsp;MLM Structure</button></a>
+									</td>
+									<td>'.$addMoneyButton.'</td>
 								</tr>
 							</tbody>';	
 					}
@@ -686,11 +775,11 @@
                 </div>
 				<div class="form-control v-form">
                 	<label class="control-label">Start Date of Membership:</label>
-                    <input type="text" placeholder="Contact No" class="textbox1" name="contact_no" value="'.$members[0]['date'].'"/>
+                    <input type="text" placeholder="Contact No" class="textbox1" name="contact_no" value="'.$this->changeDateFormat($members[0]['date']).'"/>
 				</div>	
 				<div class="form-control v-form">
                 	<label class="control-label">End Date of Membership:</label>
-                    <input type="text" placeholder="Email Id" class="textbox1" name="email_id" value="'.$members[0]['expiration_date'].'"/>
+                    <input type="text" placeholder="Email Id" class="textbox1" name="email_id" value="'.$this->changeDateFormat($members[0]['expiration_date']).'"/>
                 </div>
 				<div class="form-control v-form">
                 	<label class="control-label">Contact No:</label>
@@ -712,7 +801,7 @@
                 	<label class="control-label">Branch Name:</label>
                     <input type="text" placeholder="Branch Name" class="textbox1" name="branch" value="'.$member_ac_details[0]['branch'].'"/>
                 </div>';
-				if($members[0]['membership_validiation'] == 1)
+				if($members[0]['membership_validiation'] == 1 && $members[0]['membership_activation'] ==1)
 				{
 					$validiate = 'Valid';
 				}
@@ -739,12 +828,28 @@
 				//showing the values in form
 				foreach($mlm_details as $mlm)
 				{
+					if(!empty($mlm['parent_id']))
+					{
+						$parent = $mlm['parent_id'];
+					}
+					else
+					{
+						$parent = 'No Parent';
+					}
+					if(!empty($mlm['child_id']))
+					{
+						$child = $mlm['child_id'];
+					}
+					else
+					{
+						$child = 'No Child';
+					}
 					echo '<tbody>
 							<tr>
 								<td>'.$mlm['id'].'</td>
 								<td>'.$mlm['membership_id'].'</td>
-								<td>'.$mlm['parent_id'].'</td>
-								<td>'.$mlm['child_id'].'</td>
+								<td>'.$parent.'</td>
+								<td>'.$child.'</td>
 								<td>'.$mlm['date'].'</td>
 								<td><a href="treeStructure.php?member_id='.$mlm['membership_id'].'"><button class="btn btn-warning btn-mini" type="button">
 									<span class="icon-pencil"></span>&nbsp;&nbsp;STRUCTURE</button></a>
@@ -788,7 +893,7 @@
 								<td>'.$member[0]['name'].'</td>
 								<td>'.$withdrawal['withdraw_order_id'].'</td>
 								<td>'.$frozen_money.'</td>
-								<td>'.$withdrawal['date'].'</td>
+								<td>'.$this->changeDateFormat($withdrawal['date']).'</td>
 								<td> €'.$withdrawal['withdraw_amount'].'</td>';
 								//checking the status value
 								if($status == 0)
@@ -914,62 +1019,135 @@
 			if(!empty($payments))
 			{
 				foreach($payments as $payment){
-					//getting purchase details
-					$purchase = $this->manageContent->getValueWhere("purchase_info","*","order_id",$payment['order_id']);
-					//checking for membership_id
-					if($payment['membership_id'] == 'guest')
+					if(!empty($payment['product_id']) && !empty($payment['membership_id']))
 					{
-						$member_name = 'guest';
-					}
-					else
-					{
-						$member = $this->manageContent->getValueWhere("member_table","*","membership_id",$payment['membership_id']);
-						$member_name = $member[0]['name'];
-					}
-					if($purchase[0]['payment_status'] == 0 && $purchase[0]['payment_request'] == $input_field)
-					{
-						//showing them in table
-						echo '<tbody>
-								<tr>
-									<td><a href="orderDetails.php?o_id='.$payment['order_id'].'">'.$payment['order_id'].'</a></td>
-									<td>'.$member_name.'</td>
-									<td>'.$payment['date'].'</td>
-									<td> €'.$payment['price'].'</td>';
-									if($input_field == NULL)
-									{
-										echo '<td>
-										<a href="v-includes/functions/function.paymentConfirm.php?o_id='.$payment['order_id'].'">
-											<button class="btn btn-success" type="button">
-												<span class="icon-pencil"></span>&nbsp;&nbsp;CONFIRM</button>
-											</a></td>';
-									}
-									else if($input_field == 'Progressing')
-									{
-										echo '<td>
-										<a href="v-includes/functions/function.finalConfirmationPayment.php?o_id='.$payment['order_id'].'">
-											<button class="btn btn-danger" type="button">
-												<span class="icon-pencil"></span>&nbsp;&nbsp;FINAL CONFIRM</button>
-											</a></td>
-										<td><a href="v-includes/functions/function.undoPaymentConfirmation.php?o_id='.$payment['order_id'].'">
-											<button class="btn btn-warning" type="button">
-												<span class="icon-pencil"></span>&nbsp;&nbsp;UNDO</button>
-											</a></td>';
-									}
-									else if($input_field == 'Undo')
-									{
-										echo '';
-									}
-									
-						echo	'</tr>
-							</tbody>';
-					}
-					else
-					{
-						echo '';
+						//getting purchase details
+						$purchase = $this->manageContent->getValueWhere("purchase_info","*","order_id",$payment['order_id']);
+						//checking for membership_id
+						if($payment['membership_id'] == 'guest')
+						{
+							$member_name = 'guest';
+						}
+						else
+						{
+							$member = $this->manageContent->getValueWhere("member_table","*","membership_id",$payment['membership_id']);
+							$member_name = $member[0]['name'];
+						}
+						if($purchase[0]['payment_status'] == 0 && $purchase[0]['payment_request'] == $input_field)
+						{
+							//showing them in table
+							echo '<tbody>
+									<tr>
+										<td><a href="orderDetails.php?o_id='.$payment['order_id'].'">'.$payment['order_id'].'</a></td>
+										<td>'.$member_name.'</td>
+										<td>'.$this->changeDateFormat($payment['date']).'</td>
+										<td> €'.$payment['price'].'</td>';
+										if($input_field == NULL)
+										{
+											echo '<td>
+											<a href="v-includes/functions/function.paymentConfirm.php?o_id='.$payment['order_id'].'">
+												<button class="btn btn-success" type="button">
+													<span class="icon-pencil"></span>&nbsp;&nbsp;CONFIRM</button>
+												</a></td>
+												<td>
+											<a href="v-includes/functions/function.deleteOrder.php?o_id='.$payment['order_id'].'">
+												<button class="btn btn-danger" type="button">
+													<span class="icon-pencil"></span>&nbsp;&nbsp;DELETE</button>
+												</a></td>';
+										}
+										else if($input_field == 'Progressing')
+										{
+											echo '<td>
+											<a href="v-includes/functions/function.finalConfirmationPayment.php?o_id='.$payment['order_id'].'">
+												<button class="btn btn-danger" type="button">
+													<span class="icon-pencil"></span>&nbsp;&nbsp;FINAL CONFIRM</button>
+												</a></td>
+											<td><a href="v-includes/functions/function.undoPaymentConfirmation.php?o_id='.$payment['order_id'].'">
+												<button class="btn btn-warning" type="button">
+													<span class="icon-pencil"></span>&nbsp;&nbsp;UNDO</button>
+												</a></td>';
+										}
+										else if($input_field == 'Undo')
+										{
+											echo '';
+										}
+										
+							echo	'</tr>
+								</tbody>';
+						}
+						else
+						{
+							echo '';
+						}
 					}
 				}
 			}
 			
+		}
+		
+		/*
+			getting add money details
+			Auth: Dipanjan
+		*/
+		function getAddMoneyDetails(){
+			//getting values from add money info
+			$moneyDetails = $this->manageContent->getValueWhere_descending("addmoney_info","*","status",0);
+			//checking for empty value
+			if(!empty($moneyDetails))
+			{
+				foreach($moneyDetails as $moneyDetail){
+					//getting member details
+					$member_details = $this->manageContent->getValueWhere("member_table","*","membership_id",$moneyDetail['membership_id']);
+					
+					echo '<tbody>
+							<tr>
+								<td>'.$moneyDetail['money_id'].'</td>
+								<td>'.$moneyDetail['membership_id'].'</td>
+								<td>'.$member_details[0]['name'].'</td>
+								<td>'.$moneyDetail['date'].'</td>
+								<td>
+									<form action="v-includes/functions/function.confirmAddMoney.php" method="post" class="form-inline">
+										<input type="text" name="amount" style="width:50%;">
+										<input type="hidden" name="id" value="'.$moneyDetail['id'].'">
+										<input type="submit" class="btn btn-success" value="Confirm">
+									</form>
+								</td>
+								<td>
+								<a href="v-includes/functions/function.deleteAddMoney.php?id='.$moneyDetail['id'].'">
+									<button class="btn btn-danger" type="button">
+										<span class="icon-pencil"></span>&nbsp;&nbsp;DELETE</button>
+									</a></td>
+							</tr>
+						</tbody>';
+				}
+			}
+		}
+		
+		/*
+			getting successfull add money details
+			Auth: Dipanjan
+		*/
+		function getSuccessfullAddMoneyDetails(){
+			//getting values from add money info
+			$moneyDetails = $this->manageContent->getValueWhere_descending("addmoney_info","*","status",1);
+			//checking for empty value
+			if(!empty($moneyDetails))
+			{
+				foreach($moneyDetails as $moneyDetail){
+					//getting member details
+					$member_details = $this->manageContent->getValueWhere("member_table","*","membership_id",$moneyDetail['membership_id']);
+					
+					echo '<tbody>
+							<tr>
+								<td>'.$moneyDetail['money_id'].'</td>
+								<td>'.$moneyDetail['membership_id'].'</td>
+								<td>'.$member_details[0]['name'].'</td>
+								<td>'.$moneyDetail['date'].'</td>
+								<td>€ '.$moneyDetail['amount'].'</td>
+							</tr>
+						</tbody>';
+				}
+			}
 		}
 		
 		/*
@@ -983,58 +1161,133 @@
 			if(!empty($payments))
 			{
 				foreach($payments as $payment){
-					//getting purchase details
-					$purchase = $this->manageContent->getValueWhere("purchase_info","*","order_id",$payment['order_id']);
-					//checking for membership_id
-					if($payment['membership_id'] == 'guest')
+					if(!empty($payment['product_id']) && !empty($payment['membership_id']))
 					{
-						$member_name = 'guest';
+						//getting purchase details
+						$purchase = $this->manageContent->getValueWhere("purchase_info","*","order_id",$payment['order_id']);
+						//checking for membership_id
+						if($payment['membership_id'] == 'guest')
+						{
+							$member_name = 'guest';
+						}
+						else
+						{
+							$member = $this->manageContent->getValueWhere("member_table","*","membership_id",$payment['membership_id']);
+							$member_name = $member[0]['name'];
+						}
+						if($purchase[0]['payment_status'] == 0 && $purchase[0]['payment_request'] == $input_field)
+						{
+							//showing them in table
+							echo '<tbody>
+									<tr>
+										<td><a href="orderDetails.php?o_id='.$payment['order_id'].'">'.$payment['order_id'].'</a></td>
+										<td>'.$member_name.'</td>
+										<td>'.$this->changeDateFormat($payment['date']).'</td>
+										<td> €'.$payment['price'].'</td>';
+										if($input_field == NULL)
+										{
+											echo '<td>
+											<a href="v-includes/functions/function.paymentConfirmByAccount.php?o_id='.$payment['order_id'].'">
+												<button class="btn btn-success" type="button">
+													<span class="icon-pencil"></span>&nbsp;&nbsp;CONFIRM</button>
+												</a></td>';
+										}
+										else if($input_field == 'Progressing')
+										{
+											echo '<td>
+											<a href="v-includes/functions/function.finalConfirmationPaymentByAccount.php?o_id='.$payment['order_id'].'">
+												<button class="btn btn-danger" type="button">
+													<span class="icon-pencil"></span>&nbsp;&nbsp;FINAL CONFIRM</button>
+												</a></td>
+											<td><a href="v-includes/functions/function.undoPaymentConfirmationByAccount.php?o_id='.$payment['order_id'].'">
+												<button class="btn btn-warning" type="button">
+													<span class="icon-pencil"></span>&nbsp;&nbsp;UNDO</button>
+												</a></td>';
+										}
+										else if($input_field == 'Undo')
+										{
+											echo '';
+										}
+										
+							echo	'</tr>
+								</tbody>';
+						}
+						else
+						{
+							echo '';
+						}
 					}
-					else
+				}
+			}
+			
+		}
+		
+		/*
+			getting payment request from database table for paypal
+			Auth: Dipanjan
+		*/
+		function getDuePaymentsPaypal($input_field){
+			//getting values from purchase info
+			$payments = $this->manageContent->getValueWhere_descending("purchase_log","*","payment_method","paypal");
+			//checking for empty value
+			if(!empty($payments))
+			{
+				foreach($payments as $payment){
+					if(!empty($payment['product_id']) && !empty($payment['membership_id']))
 					{
-						$member = $this->manageContent->getValueWhere("member_table","*","membership_id",$payment['membership_id']);
-						$member_name = $member[0]['name'];
-					}
-					if($purchase[0]['payment_status'] == 0 && $purchase[0]['payment_request'] == $input_field)
-					{
-						//showing them in table
-						echo '<tbody>
-								<tr>
-									<td><a href="orderDetails.php?o_id='.$payment['order_id'].'">'.$payment['order_id'].'</a></td>
-									<td>'.$member_name.'</td>
-									<td>'.$payment['date'].'</td>
-									<td> €'.$payment['price'].'</td>';
-									if($input_field == NULL)
-									{
-										echo '<td>
-										<a href="v-includes/functions/function.paymentConfirmByAccount.php?o_id='.$payment['order_id'].'">
-											<button class="btn btn-success" type="button">
-												<span class="icon-pencil"></span>&nbsp;&nbsp;CONFIRM</button>
-											</a></td>';
-									}
-									else if($input_field == 'Progressing')
-									{
-										echo '<td>
-										<a href="v-includes/functions/function.finalConfirmationPaymentByAccount.php?o_id='.$payment['order_id'].'">
-											<button class="btn btn-danger" type="button">
-												<span class="icon-pencil"></span>&nbsp;&nbsp;FINAL CONFIRM</button>
-											</a></td>
-										<td><a href="v-includes/functions/function.undoPaymentConfirmationByAccount.php?o_id='.$payment['order_id'].'">
-											<button class="btn btn-warning" type="button">
-												<span class="icon-pencil"></span>&nbsp;&nbsp;UNDO</button>
-											</a></td>';
-									}
-									else if($input_field == 'Undo')
-									{
-										echo '';
-									}
-									
-						echo	'</tr>
-							</tbody>';
-					}
-					else
-					{
-						echo '';
+						//getting purchase details
+						$purchase = $this->manageContent->getValueWhere("purchase_info","*","order_id",$payment['order_id']);
+						//checking for membership_id
+						if($payment['membership_id'] == 'guest')
+						{
+							$member_name = 'guest';
+						}
+						else
+						{
+							$member = $this->manageContent->getValueWhere("member_table","*","membership_id",$payment['membership_id']);
+							$member_name = $member[0]['name'];
+						}
+						if($purchase[0]['payment_status'] == 0 && $purchase[0]['payment_request'] == $input_field)
+						{
+							//showing them in table
+							echo '<tbody>
+									<tr>
+										<td><a href="orderDetails.php?o_id='.$payment['order_id'].'">'.$payment['order_id'].'</a></td>
+										<td>'.$member_name.'</td>
+										<td>'.$this->changeDateFormat($payment['date']).'</td>
+										<td> €'.$payment['price'].'</td>';
+										if($input_field == NULL)
+										{
+											echo '<td>
+											<a href="#">
+												<button class="btn btn-success" type="button">
+													<span class="icon-pencil"></span>&nbsp;&nbsp;CONFIRM</button>
+												</a></td>';
+										}
+										else if($input_field == 'Progressing')
+										{
+											echo '<td>
+											<a href="v-includes/functions/function.finalConfirmationPaymentByPaypal.php?o_id='.$payment['order_id'].'">
+												<button class="btn btn-danger" type="button">
+													<span class="icon-pencil"></span>&nbsp;&nbsp;FINAL CONFIRM</button>
+												</a></td>
+											<td><a href="v-includes/functions/function.undoPaymentConfirmationByPaypal.php?o_id='.$payment['order_id'].'">
+												<button class="btn btn-warning" type="button">
+													<span class="icon-pencil"></span>&nbsp;&nbsp;UNDO</button>
+												</a></td>';
+										}
+										else if($input_field == 'Undo')
+										{
+											echo '';
+										}
+										
+							echo	'</tr>
+								</tbody>';
+						}
+						else
+						{
+							echo '';
+						}
 					}
 				}
 			}
@@ -1132,7 +1385,7 @@
 				}
 				echo '<tr>
 					 <td>'.$category['category'].'</td>
-					 <td>'.$category['date'].'</td>
+					 <td>'.$this->changeDateFormat($category['date']).'</td>
 					 <td>'.$status.'</td>
 					 <td><a href="editCategory.php?c_id='.$category['id'].'">
 					 <button class="btn btn-warning" type="button">
@@ -1165,7 +1418,7 @@
 				}
 				echo '<tr>
 					 <td>'.$coupon['category'].'</td>
-					 <td>'.$coupon['date'].'</td>
+					 <td>'.$this->changeDateFormat($coupon['date']).'</td>
 					 <td>'.$status.'</td>
 					 <td><a href="editCouponCategory.php?c_id='.$coupon['id'].'">
 					 <button class="btn btn-warning" type="button">
@@ -1199,7 +1452,7 @@
 				echo '<tr>
 					 <td>'.$category['category'].'</td>
 					 <td>'.$category['sub_category'].'</td>
-					 <td>'.$category['date'].'</td>
+					 <td>'.$this->changeDateFormat($category['date']).'</td>
 					 <td>'.$status.'</td>
 					 <td><button class="btn btn-warning" type="button">
 							<span class="icon-pencil"></span>&nbsp;&nbsp;EDIT</button>
@@ -1210,6 +1463,123 @@
 				
 			}
 		}
+		
+		/*
+		- getting invoice details
+		- Auth Dipanjan
+		*/
+		function getInvoiceDetails($from_date,$to_date){
+			//getting values from database
+			$all_invoices = $this->manageContent->getValueBetween("purchase_log","*","invoice_date",$from_date,$to_date);
+			//initialize some parameters
+			$totalPrice = 0;
+			$totalBasePrice = 0;
+			$totalTax22 = 0;
+			$totalTax9 = 0;
+			//print_r($all_invoices);
+			if(!empty($all_invoices[0]))
+			{
+				foreach($all_invoices as $all_invoice)
+				{
+					if(!empty($all_invoice['invoice_no']))
+					{
+						//print_r($all_invoice);
+						//checking for member or guest
+						if($all_invoice['membership_id'] == 'guest')
+						{
+							$email_id = $all_invoice['email_id'];
+							$price = 'price_guest';
+							$tax_id = '';
+						}
+						else
+						{
+							$member = $this->manageContent->getValueWhere("member_table","*","membership_id",$all_invoice['membership_id']);
+							$member_ac = $this->manageContent->getValueWhere("member_account_details","*","membership_id",$all_invoice['membership_id']);
+							$tax_id = $member_ac[0]['ifsc_code'];
+							$email_id = $member[0]['email_id'];
+							$price = 'price_members';
+						}
+						//calculating base price and tax values for each product and coupon
+						$all_products = $this->manageContent->getValueWhere("purchase_info","*","order_id",$all_invoice['order_id']);
+						//print_r($all_products);
+						//initialize parameter
+						$quantity = "";
+						$total_price_without_tax = 0;
+						$total_price_with_tax = 0;
+						$tax22 = 0;
+						$tax_9 = 0;
+						foreach($all_products as $all_product){
+							$val = $all_product['product_id'];
+							if(substr($val,0,1) == 'M')
+							{
+								$product = $this->manageContent->getValueWhere("membership_product","*","product_id",$val);
+								$tax = 0;
+								$product_price = $product[0][$price];
+								
+							}
+							else if(substr($val,0,1) == 'C')
+							{
+								$product = $this->manageContent->getValueWhere("coupon_table","*","coupon_id",$val);
+								$tax = $product[0]['tax'];
+								$product_price = $product[0][$price];
+							}
+							else
+							{
+								$product = $this->manageContent->getValueWhere("product_table","*","product_id",$val);
+								$tax = $product[0]['tax'];
+								$product_price = $product[0][$price];
+							}
+							//getting price without tax
+							$price_without_tax = ($all_product['quantity'])*($product_price/(1+($tax/100)));
+							$price_with_tax = ($all_product['quantity'])*($product_price);
+							$total_price_without_tax = $total_price_without_tax + $price_without_tax;
+							$total_price_with_tax = $total_price_with_tax + $price_with_tax;
+							//for 22% or 9.5% tax
+							if($tax == '22%' || $tax == 22)
+							{
+								$tax22 = $tax22 + ($total_price_with_tax - $total_price_without_tax);
+							}
+							else if($tax == '9.5%' || $tax == 9.5)
+							{
+								$tax_9 = $tax_9 + ($total_price_with_tax - $total_price_without_tax);
+							}
+						}
+						//calculating total amount of different categories
+						$totalPrice = $totalPrice + $all_invoice['price'];
+						$totalBasePrice = $totalBasePrice + $total_price_without_tax;
+						$totalTax22 = $totalTax22 + $tax22;
+						$totalTax9 = $totalTax9 + $tax_9;
+						//showing details in table
+						echo '<tr>
+								<td>'.$all_invoice['invoice_date'].'</td>
+								<td>'.$all_invoice['invoice_no'].'</td>
+								<td><a href="orderDetails.php?o_id='.$all_invoice['order_id'].'">'.$all_invoice['order_id'].'</a></td>
+								<td>'.$tax_id.'</td>
+								<td> €'.$all_invoice['price'].'</td>
+								<td> €'.round($total_price_without_tax,2).'</td>
+								<td> €'.round($tax22,2).'</td>
+								<td> €'.round($tax_9,2).'</td>
+							</tr>';
+					}
+				}
+				//showing the total amounts
+				echo '<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td style="color:#ff0000"><b>TOTAL:</b></td>
+						<td> €'.$totalPrice.'</td>
+						<td> €'.round($totalBasePrice,2).'</td>
+						<td> €'.round($totalTax22,2).'</td>
+						<td> €'.round($totalTax9,2).'</td>
+					</tr>'; 
+			}
+			else
+			{
+				echo "NO INVOICE FOUND";
+			}
+		}
+		
 		
 		/*
 		- getting member list of selected keyword
@@ -1223,7 +1593,7 @@
 				//showing them in table
 				foreach($members as $member){
 					//checking for membership validiation
-					if($member['membership_validiation'] == 1)
+					if($member['membership_validiation'] == 1 && $member['membership_activation'] == 1)
 					{
 						$membership_validiation = 'Valid';
 					}
@@ -1235,9 +1605,9 @@
 							<td>'.$member['membership_id'].'</td>
 							<td>'.$member['name'].'</td>
 							<td>'.$member['email_id'].'</td>
-							<td>'.$member['expiration_date'].'</td>
+							<td>'.$this->changeDateFormat($member['expiration_date']).'</td>
 							<td>'.$membership_validiation.'</td>';
-							if($membership_validiation == 'Valid')
+							if($member['membership_activation'] == 1)
 							{
 								echo '<td><a href="v-includes/functions/function.terminateMember.php?m_id='.$member['membership_id'].'&validiation=0">
 								<button class="btn btn-danger" type="button">
@@ -1263,6 +1633,53 @@
 				echo "NO MEMBER FOUND";
 			}
 		}
+		
+		/*
+		- getting member statistics
+		- Auth Dipanjan
+		*/
+		function getMemberStatistics(){
+			//getting member list]
+			$members = $this->manageContent->getValue("member_table","*");
+			if(!empty($members))
+			{
+				//initialize parameters
+				$total_member = 0;
+				$total_valid_member = 0;
+				$total_invalid_member = 0;
+				foreach($members as $member)
+				{
+					$total_member = $total_member + 1;
+					//checking for validiation
+					if($member['membership_validiation'] == 1 && $member['membership_activation'] == 1)
+					{
+						$total_valid_member = $total_valid_member + 1;
+					}
+					else
+					{
+						$total_invalid_member = $total_invalid_member + 1;
+					}
+				}
+				//showing the values in page
+				echo '<div class="row-fluid">
+						<p class="trust_balence_outline"><span class="system_heading">Total Number Of Member:</span>
+						<span class="system_credit">'.$total_member.'</span></p>
+					</div>
+					<div class="row-fluid">
+						<p class="trust_balence_outline"><span class="system_heading">Total Number Of Valid Member:</span>
+						<span class="system_debit">'.$total_valid_member.'</span></p>
+					</div>
+					<div class="row-fluid">
+						<p class="trust_balence_outline"><span class="system_heading">Total Number Of Invalid Member:</span>
+						<span class="system_balence">'.$total_invalid_member.'</span></p>
+					</div>';
+			}
+			else
+			{
+				echo 'There Are No Memeber In The System';
+			}
+		}
+		
 		
 		/*
 		- getting system balence
@@ -1358,7 +1775,70 @@
 								<td>'.$sl_no.'</td>
 								<td>'.$product_name.'</td>
 								<td>'.$transactions['product_quantity'].'</td>
-								<td>'.$transactions['date'].'</td>
+								<td>'.$this->changeDateFormat($transactions['date']).'</td>
+								<td> € '.$transactions['debit'].'</td>
+							</tr>';
+							
+							// total amount calculation
+							$total_amount = $total_amount + $transactions['debit'];
+							//increment of serial_no variable
+							$sl_no++;
+					}
+				}
+				return $total_amount;
+			}
+			else
+			{
+				return 0;
+			}
+			
+		}
+		
+		/*
+		- getting potential amount
+		- Auth Dipanjan
+		*/
+		function getPotentialAmount(){
+			$account_no = "potentialMoney";
+			//getting money transfer details from database
+			$transaction = $this->manageContent->getValueWhere_descending("money_transfer_log","*","membership_id",$account_no);
+			if(!empty($transaction))
+			{
+				//initialize the variables
+				$sl_no = 1;
+				$total_amount = 0;
+				foreach($transaction as $transactions){
+					//checking for only debited amount
+					if(!empty($transactions['debit']))
+					{	
+						//checking for membership product or not
+						if(substr($transactions['product_id'],0,2) == 'M_')
+						{
+							//fetching the name of product from product table
+							$product_details = $this->manageContent->getValueWhere("membership_product","*","product_id",$transactions['product_id']);
+							$product_name = $product_details[0]['product_name'];
+						}
+						else if(substr($transactions['product_id'],0,1) == 'C')
+						{
+							$coupon_details = $this->manageContent->getValueWhere("coupon_table","*","coupon_id",$transactions['product_id']);
+							$product_name = $coupon_details[0]['coupon_name'];
+						}
+						else
+						{
+							//fetching the name of product from product table
+							$product_details = $this->manageContent->getValueWhere("product_table","*","product_id",$transactions['product_id']);
+							$product_name = $product_details[0]['product_name'];
+						}
+						//getting member details
+						$memberDetails = $this->manageContent->getValueWhere("member_table","*","membership_id",$transactions['notes']);
+						
+						//showing the details of money debited in detail
+						echo '<tr>
+								<td>'.$sl_no.'</td>
+								<td>'.$memberDetails[0]['name'].'</td>
+								<td>'.$product_name.'</td>
+								<td>'.$transactions['product_quantity'].'</td>
+								<td>'.$this->changeDateFormat($transactions['date']).'</td>
 								<td> € '.$transactions['debit'].'</td>
 							</tr>';
 							
@@ -1440,7 +1920,7 @@
 						echo  '</td>
 								<td>'.$product_name.'</td>
 								<td>'.$transactions['product_quantity'].'</td>
-								<td>'.$transactions['date'].'</td>
+								<td>'.$this->changeDateFormat($transactions['date']).'</td>
 								<td> € '.$transactions['credit'].'</td>
 							</tr>';
 							
@@ -1517,7 +1997,7 @@
 						echo  '</td>
 								<td>'.$product_name.'</td>
 								<td>'.$transactions['product_quantity'].'</td>
-								<td>'.$transactions['date'].'</td>
+								<td>'.$this->changeDateFormat($transactions['date']).'</td>
 								<td> € '.$transactions['debit'].'</td>
 							</tr>';
 							
@@ -1551,18 +2031,20 @@
                     echo '<td>'.$customPage['id'].'</td>';
                     echo '<td>'.$customPage['name'].'</td>';
                     echo '<td>'.substr($customPage['content'],0,50).'</td>';
-                    echo '<td><button type="button" class="btn btn-primary">Edit</button>';
+                    echo '<td><a href="editMyPageDetails.php?id='.$customPage['id'].'"><button type="button" class="btn btn-primary">Edit</button></a></td>';
                     if($customPage['status'] == 0){
                         $button = 'Enable';
                         $buttonClass = 'btn-success';
+						$changeValue = 1;
                     }
                     else if($customPage['status'] == 1){
                         $button = 'disable';
                         $buttonClass = 'btn-danger';
+						$changeValue = 0;
                     }
                     
-                    echo '<td><button type="button" class="btn '.$buttonClass.'">'.$button.'</button>';
-                    echo '<td><button type="button" class="btn btn-danger">Delete</button>';
+                    echo '<td><a href="v-includes/functions/function.updateStatusMyPage.php?id='.$customPage['id'].'&&action='.$changeValue.'"><button type="button" class="btn '.$buttonClass.'">'.$button.'</button></a></td>';
+                    echo '<td><a href="v-includes/functions/function.deleteMyPage.php?id='.$customPage['id'].'"><button type="button" class="btn btn-danger">Delete</button></a></td>';
                 
                 echo '<tr>';
             }
@@ -1570,12 +2052,38 @@
         }
 		
 		/*
+			method for getting member details
+			Auth: Dipanjan
+		*/
+		function getMypageDetails($id){
+			//fetching values from database
+			$mypage = $this->manageContent->getValueWhere("mypage","*","id",$id);
+			//showing the values in ui layer form
+			echo '<div class="form-control v-form">
+                    <label class="control-label">Name of your Page</label>
+                    <input type="text" id="pageName" placeholder="Please Enter the Name of your page" class="textbox1" name="category" value="'.$mypage[0]['name'].'"/>
+                </div>
+                
+                <div class="form-control v-form">
+                    <label class="control-label">Enter the content</label><br><br>
+                    <textarea type="text" id="editor1" placeholder="Description" class="textbox1 textarea" name="description">'.$mypage[0]['content'].'</textarea>
+                </div>   
+                 
+                <div class="form-control v-form">
+                    <div class="function_result"></div>
+					<input type="hidden" name="id" value="'.$mypage[0]['id'].'">
+                    <input type="submit" value="UPDATE" class="btn btn-large btn-inverse btn1" />
+                    <div class="clearfix"></div>
+                </div>';
+		}
+		
+		/*
 			getting sold product list from database table
 			Auth: Dipanjan
 		*/
-		function soldProductList(){
+		function soldProductList($from_date,$to_date){
 			//fetching values from database
-			$purchase_details = $this->manageContent->getValue_descending("purchase_log","*");
+			$purchase_details = $this->manageContent->getValueBetweenDescending("purchase_log","*","date",$from_date,$to_date);
 			if(!empty($purchase_details))
 			{
 				//showing the values in form
@@ -1601,7 +2109,7 @@
 									<td>'.$member_name.'</td>
 									<td>'.$this->anOrderProductList($purchase_info[0]['order_id']).'</td>
 									<td>'.$this->anOrderQuantityList($purchase_info[0]['order_id']).'</td>
-									<td>'.$purchase_detail['date'].'</td>
+									<td>'.$this->changeDateFormat($purchase_detail['date']).'</td>
 									<td>'.$purchase_detail['payment_method'].'</td>
 									<td> €'.$purchase_detail['price'].'</td>
 								</tr>
@@ -1727,7 +2235,7 @@
 				</div>
 				<div class="row-fluid text_para">
 					<div class="span3 offset1 left_text">Date:</div>
-					<div class="span8 right_text">'.$order_details[0]['date'].'</div>
+					<div class="span8 right_text">'.$this->changeDateFormat($order_details[0]['date']).'</div>
 				</div>
 				<div class="row-fluid text_para">
 					<div class="span3 offset1 left_text">Shipping Address:</div>
@@ -1760,6 +2268,11 @@
 				if($order_details[0]['delivery_status'] == 1)
 				{
 					$d_status = 'Delivered';
+					$btn = "";
+				}
+				elseif($order_details[0]['delivery_status'] == 0 && $product_details[0]['payment_request'] == 'Undo')
+				{
+					$d_status = 'Product Returned';
 					$btn = "";
 				}
 				else
@@ -1830,7 +2343,7 @@
 										<td>'.$member_name.'</td>
 										<td>'.$p_name[0]['product_name'].'</td>
 										<td>'.$purchase['quantity'].'</td>
-										<td>'.$purchase['date'].'</td>
+										<td>'.$this->changeDateFormat($purchase['date']).'</td>
 										<td>'.$purchase['payment_method'].'</td>
 										<td>'.$p_status.'</td>
 									</tr>
@@ -1884,6 +2397,10 @@
 					{
 						$d_status = 'Delivered';
 					}
+					elseif($order['delivery_status'] == 0 && $purchase_info[0]['payment_request'] == 'Undo')
+					{
+						$d_status = 'Product Returned';
+					}
 					else
 					{
 						$d_status = 'Not Delivered';
@@ -1891,7 +2408,7 @@
 					echo '<tbody>
 							<tr>
 								<td><a href="orderDetails.php?o_id='.$order['order_id'].'">'.$order['order_id'].'</a></td>
-								<td>'.$order['date'].'</td>
+								<td>'.$this->changeDateFormat($order['date']).'</td>
 								<td>'.$order['payment_method'].'</td>
 								<td>'.$p_status.'</td>
 								<td>'.$d_status.'</td>
@@ -1925,9 +2442,13 @@
 						$payment_status = 'Confirmed';
 					}
 					//checking for delivary status
-					if($purchase['delivery_status'] == 0)
+					if($purchase['delivery_status'] == 0 && $purchase_info[0]['payment_request'] != 'Undo')
 					{
 						$delivery_status = 'Not Delivered';
+					}
+					elseif($purchase['delivery_status'] == 0 && $purchase_info[0]['payment_request'] == 'Undo')
+					{
+						$delivery_status = 'Product Returned';
 					}
 					else
 					{
@@ -1939,17 +2460,70 @@
 							<td>'.$this->anOrderProductList($purchase['order_id']).'</td>
 							<td>'.$this->anOrderQuantityList($purchase['order_id']).'</td>
 							<td>  €'.$purchase['price'].'</td>
-							<td>'.$purchase['date'].'</td>
+							<td>'.$this->changeDateFormat($purchase['date']).'</td>
 							<td>'.$payment_status.'</td>
 							<td>'.$delivery_status.'</td>
 						</tr>';
 				}
+				
 			}
 			else
 			{
 				echo 'NO ORDER LIST';
 			}
 		}
+		
+		/*
+			getting withdraw statistics of given date interval
+			Auth: Dipanjan
+		*/
+		function getWithdrawStatistics($from_date,$to_date){
+			//getting values from databases
+			$withdraws = $this->manageContent->getValueBetweenDescending("withdraw_log","*","date",$from_date,$to_date);
+			//checking for empty result
+			if(!empty($withdraws[0]))
+			{
+				foreach($withdraws as $withdraw)
+				{
+					//checking for frozen money
+					if($withdraw['frozen_money'] == 1)
+					{
+						$frozen_money = 'Yes';
+					}
+					else
+					{
+						$frozen_money = 'No';
+					}
+					//checking for withdraw confirmation
+					if($withdraw['status'] == 1)
+					{
+						$status = 'Confirmed';
+					}
+					else
+					{
+						$status = 'Processing';
+					}
+					//getting member details
+					$member = $this->manageContent->getValueWhere("member_table","*","membership_id",$withdraw['membership_id']);
+					$member_ac = $this->manageContent->getValueWhere("member_account_details","*","membership_id",$withdraw['membership_id']);
+					//showing info in table
+					echo '<tr>
+							<td>'.$this->changeDateFormat($withdraw['date']).'</td>
+							<td><a href="listMembers.php?membership_id='.$withdraw['membership_id'].'">'.$withdraw['membership_id'].'</a></td>
+							<td>'.$member[0]['name'].'</td>
+							<td>'.$member_ac[0]['ifsc_code'].'</td>
+							<td>'.$frozen_money.'</td>
+							<td>  €'.$withdraw['withdraw_amount'].'</td>
+							<td>'.$status.'</td>
+						</tr>';
+				}
+			}
+			else
+			{
+				echo 'NO WITHDRAW LIST';
+			}
+		}
+		
 		/*
 			getting members withdraw history
 			Auth: Dipanjan
@@ -1982,7 +2556,7 @@
 					//showing them in table
 					echo '<tr>
 							<td>'.$withdraw['withdraw_order_id'].'</td>
-							<td>'.$withdraw['date'].'</td>
+							<td>'.$this->changeDateFormat($withdraw['date']).'</td>
 							<td>'.$frozen_money.'</td>
 							<td>  €'.$withdraw['withdraw_amount'].'</td>
 							<td>'.$confirm.'</td>
@@ -2011,6 +2585,7 @@
 			$withdraw_requested_amount = 0;
 			$purchase_by_account = 0;
 			$net_amount = 0;
+			$add_money = 0;
 			if(count($transaction[0]) > 0)
 			{  
 				foreach($transaction as $transactions){
@@ -2027,7 +2602,7 @@
 									<td>'.$sl_no.'</td>
 									<td>'.$coupon_details[0]['coupon_name'].'</td>
 									<td>'.$transactions['product_quantity'].'</td>
-									<td>'.$transactions['date'].'</td>
+									<td>'.$this->changeDateFormat($transactions['date']).'</td>
 									<td>  € '.$transactions['debit'].'</td>
 								</tr>';
 								
@@ -2055,7 +2630,7 @@
 									<td>'.$sl_no.'</td>
 									<td>'.$product_details[0]['product_name'].'</td>
 									<td>'.$transactions['product_quantity'].'</td>
-									<td>'.$transactions['date'].'</td>
+									<td>'.$this->changeDateFormat($transactions['date']).'</td>
 									<td>  € '.$transactions['debit'].'</td>
 								</tr>';
 								
@@ -2069,7 +2644,7 @@
 				}
 				//getting the withdrawal amount from database
 				$withdraws = $this->manageContent->
-			getValue_twoCoditions("withdraw_log","*","membership_id",$membership_id,"frozen_money",0);
+			getValue_twoCoditions("withdraw_log","*","membership_id",$membership_id,"frozen_money",$frozen_value);
 				//getting the amount withdrawal to that member
 				if(!empty($withdraws[0]))
 				{
@@ -2099,7 +2674,19 @@
 			{
 				echo "";
 			}
-
+			if($frozen_value == 0)
+			{
+				//calculating add money to ewallet
+				$add_money_details = $this->manageContent->getValue_twoCoditions("addmoney_info","*","membership_id",$membership_id,"status",1);
+				if(!empty($add_money_details))
+				{
+					foreach($add_money_details as $add_money_detail)
+					{
+						$add_money = $add_money + $add_money_detail['amount'];
+					}
+				}
+			}
+				
 			//showing total amount in table
 			echo '<tr>
 					<td></td>
@@ -2137,16 +2724,27 @@
 						<td>  € '.$purchase_by_account.'</td>
 					</tr>';
 			}
-			if(($total_amount - ($withdraw_requested_amount + $purchase_by_account + $withdraw_amount)) != 0)
+			if(!empty($add_money))
+			{
+				echo '<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td class="total_amount"> Add Money To EWallet: </td>
+						<td>  € '.$add_money.'</td>
+					</tr>';
+			}
+			if((($total_amount + $add_money) - 
+			($withdraw_requested_amount + $purchase_by_account + $withdraw_amount)) != 0)
 			{
 				echo '<tr>
 					<td></td>
 					<td></td>
 					<td></td>
 					<td class="total_amount"> Net Amount: </td>
-					<td>  € '.($total_amount - ($withdraw_requested_amount + $purchase_by_account + $withdraw_amount)).'</td>
+					<td>  € '.(($total_amount + $add_money) - ($withdraw_requested_amount + $purchase_by_account + $withdraw_amount)).'</td>
 				</tr>';
-				return ($total_amount - ($withdraw_requested_amount + $purchase_by_account + $withdraw_amount));
+				return (($total_amount + $add_money) - ($withdraw_requested_amount + $purchase_by_account + $withdraw_amount));
 			}
 			else
 			{
@@ -2155,11 +2753,178 @@
 					<td></td>
 					<td></td>
 					<td class="total_amount"> Net Amount: </td>
-					<td>  € '.(int)($total_amount - ($withdraw_requested_amount + $purchase_by_account + $withdraw_amount)).'</td>
+					<td>  € '.(int)(($total_amount + $add_money) - ($withdraw_requested_amount + $purchase_by_account + $withdraw_amount)).'</td>
 				</tr>';
-				return (int)($total_amount - ($withdraw_requested_amount + $purchase_by_account + $withdraw_amount));
+				return (int)(($total_amount + $add_money) - ($withdraw_requested_amount + $purchase_by_account + $withdraw_amount));
 			}
 			
+		}
+		
+		/*
+		 method for membership extension
+		 Auth: Dipanjan
+		*/
+		function memberExtension(){
+			//getting valid member list
+			$allMembers = $this->manageContent->getValueWhere("member_table","*","membership_activation",1);
+			//getting current date/time
+			$getdate = getdate();
+			$date = $getdate['year']."-".$getdate['mon']."-".$getdate['mday']; 
+			if(!empty($allMembers[0]))
+			{
+				foreach($allMembers as $allMember)
+				{
+					//finding date difference of expiry date and today
+					$date1 = new DateTime($date);
+					$date2 = new DateTime($allMember['expiration_date']);
+					$diff = $date2->diff($date1);
+					$date_diff = $diff->format("%a");
+					
+					if($date_diff == 45)
+					{
+						echo '<tr>
+								<td>'.$allMember['membership_id'].'</td>
+								<td>'.$allMember['name'].'</td>
+								<td>'.$this->changeDateFormat($allMember['date']).'</td>
+								<td>'.$this->changeDateFormat($allMember['expiration_date']).'</td>
+								<td style="color:red;"> 45 Days </td>
+								<td><a href="membership_extend_mail.php?m_id='.$allMember['membership_id'].'"><button class="btn btn-danger" type="button"><span class="icon-pencil"></span>&nbsp;&nbsp;SEND MAIL</button></a></td>
+							</tr>';
+					}
+					
+					else if($date_diff == 30)
+					{
+						echo '<tr>
+								<td>'.$allMember['membership_id'].'</td>
+								<td>'.$allMember['name'].'</td>
+								<td>'.$this->changeDateFormat($allMember['date']).'</td>
+								<td>'.$this->changeDateFormat($allMember['expiration_date']).'</td>
+								<td style="color:red;"> 30 Days </td>
+								<td><a href="membership_extend_mail.php?m_id='.$allMember['membership_id'].'"><button class="btn btn-danger" type="button"><span class="icon-pencil"></span>&nbsp;&nbsp;SEND MAIL</button></a></td>
+							</tr>';
+					}
+					
+					else if($date_diff == 21)
+					{
+						echo '<tr>
+								<td>'.$allMember['membership_id'].'</td>
+								<td>'.$allMember['name'].'</td>
+								<td>'.$this->changeDateFormat($allMember['date']).'</td>
+								<td>'.$this->changeDateFormat($allMember['expiration_date']).'</td>
+								<td style="color:red;"> 21 Days </td>
+								<td><a href="membership_extend_mail.php?m_id='.$allMember['membership_id'].'"><button class="btn btn-danger" type="button"><span class="icon-pencil"></span>&nbsp;&nbsp;SEND MAIL</button></a></td>
+							</tr>';
+					}
+					
+					else if($date_diff == 14)
+					{
+						echo '<tr>
+								<td>'.$allMember['membership_id'].'</td>
+								<td>'.$allMember['name'].'</td>
+								<td>'.$this->changeDateFormat($allMember['date']).'</td>
+								<td>'.$this->changeDateFormat($allMember['expiration_date']).'</td>
+								<td style="color:red;"> 14 Days </td>
+								<td><a href="membership_extend_mail.php?m_id='.$allMember['membership_id'].'"><button class="btn btn-danger" type="button"><span class="icon-pencil"></span>&nbsp;&nbsp;SEND MAIL</button></a></td>
+							</tr>';
+					}
+					
+					else if($date_diff == 7)
+					{
+						echo '<tr>
+								<td>'.$allMember['membership_id'].'</td>
+								<td>'.$allMember['name'].'</td>
+								<td>'.$this->changeDateFormat($allMember['date']).'</td>
+								<td>'.$this->changeDateFormat($allMember['expiration_date']).'</td>
+								<td style="color:red;"> 7 Days </td>
+								<td><a href="membership_extend_mail.php?m_id='.$allMember['membership_id'].'"><button class="btn btn-danger" type="button"><span class="icon-pencil"></span>&nbsp;&nbsp;SEND MAIL</button></a></td>
+							</tr>';
+					}
+					
+					else if($date_diff == 3)
+					{
+						echo '<tr>
+								<td>'.$allMember['membership_id'].'</td>
+								<td>'.$allMember['name'].'</td>
+								<td>'.$this->changeDateFormat($allMember['date']).'</td>
+								<td>'.$this->changeDateFormat($allMember['expiration_date']).'</td>
+								<td style="color:red;"> 3 Days </td>
+								<td><a href="membership_extend_mail.php?m_id='.$allMember['membership_id'].'"><button class="btn btn-danger" type="button"><span class="icon-pencil"></span>&nbsp;&nbsp;SEND MAIL</button></a></td>
+							</tr>';
+					}
+					
+					else if($date_diff == 1)
+					{
+						echo '<tr>
+								<td>'.$allMember['membership_id'].'</td>
+								<td>'.$allMember['name'].'</td>
+								<td>'.$this->changeDateFormat($allMember['date']).'</td>
+								<td>'.$this->changeDateFormat($allMember['expiration_date']).'</td>
+								<td style="color:red;"> Last Day </td>
+								<td><a href="membership_extend_mail.php?m_id='.$allMember['membership_id'].'"><button class="btn btn-danger" type="button"><span class="icon-pencil"></span>&nbsp;&nbsp;SEND MAIL</button></a></td>
+							</tr>';
+					}	
+				}
+			}
+		}
+		
+		/*
+		 method for getting country list
+		 Auth: Dipanjan
+		*/
+		function getCountryList($country_name){
+			//getting value from database
+			$country_list = $this->manageContent->getValueWhere("country","*","status",1);
+			if(!empty($country_list[0]))
+			{
+				foreach($country_list as $country)
+				{
+					if($country['name'] == $country_name)
+					{
+						echo '<option value="'.$country['name'].'" selected="selected">'.$country['name'].'</option>';
+					}
+					else
+					{
+						echo '<option value="'.$country['name'].'">'.$country['name'].'</option>';
+					}
+				}
+			}
+		}
+		
+		/*
+		 method for getting state list
+		 Auth: Dipanjan
+		*/
+		function getStateList($state_name){
+			//getting value from database
+			if(!empty($state_name))
+			{
+				$zone_list = $this->manageContent->getValue_twoCoditions("zone","*","status",1,"name",$state_name);
+			}
+			else
+			{
+				$zone_list = $this->manageContent->getValue_twoCoditions("zone","*","status",1,"country_id",190);
+			}
+			
+			if(!empty($zone_list[0]))
+			{
+				foreach($zone_list as $zone)
+				{
+					echo '<option value="'.$zone['name'].'">'.$zone['name'].'</option>';
+					
+				}
+			}
+		}
+		
+		/*
+		 method for modifying date format
+		 Auth: Dipanjan
+		*/
+		function changeDateFormat($input_date){
+			//separating the day month year
+			$date = explode("-",$input_date);
+			//return date as dd-mm-yyyy format
+			$return_date = $date[2]."-".$date[1]."-".$date[0];
+			return $return_date;
 		}
 		
 	}

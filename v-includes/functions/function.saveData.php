@@ -50,15 +50,15 @@
             break;
 			
 		case 'memberbalancecheck':
-            $withdraw_amount = $manageContent->getNetAmount($_POST['memberid']);
-			if($withdraw_amount != 0 && $withdraw_amount >= $_POST['totalPrice'])
+            $withdraw_amount = $manageContent->getNetAmount($_POST['memberid'],$_POST['totalPrice']);
+			/*if($withdraw_amount != 0 && $withdraw_amount >= $_POST['totalPrice'])
 			  {
 				  echo '1';
 			  }
 			  else
 			  {
 				  echo '0';
-			  }
+			  }*/
             break;	
             
         case 'paymentOption':
@@ -76,7 +76,7 @@
               break;
 		
 		case 'mypayment':
-			  $withdraw_amount = $manageContent->getNetAmount($_POST['memberid']);
+			  $withdraw_amount = $manageContent->getNetAmount($_POST['memberid'],$_POST['totalPrice']);
 			  if($withdraw_amount != 0 && $withdraw_amount >= $_POST['totalPrice'])
 			  {
 					$insertPaymentConfirmAccount = $manageContent->insertPaymentConfirmAccount($_SESSION['uniqueid'],$_POST['totalPrice'],$_POST['memberid'],$_POST['allProducts']);
@@ -91,6 +91,44 @@
 		
 			break;
             
+			case 'addMoney':
+				if($_SESSION['memberId'] != 'guest')
+				{
+					//creating uniq id for add money
+					$money_id = uniqid('money');
+					//insert values to add money info table
+					$insertMoney = $manageContent->addMoneyToEWallet($_SESSION['memberId'],$money_id);
+					
+					if($insertMoney[0] == 1)
+					{
+						$mailSent = $mail->addMoneyMail($insertMoney[1],$insertMoney[2],$money_id);
+					}
+				}
+				
+			break;
+			
+			case 'addMoneyToBank':
+				if($_SESSION['memberId'] != 'guest')
+				{
+					//creating uniq id for add money
+					$money_id = uniqid('money');
+					//insert values to add money info table
+					$insertMoney = $manageContent->addMoneyToEWallet($_SESSION['memberId'],$money_id);
+					
+					if($insertMoney[0] == 1)
+					{
+						$mailSent = $mail->addMoneyToBankMail($insertMoney[1],$insertMoney[2],$money_id);
+					}
+				}
+				
+			break;
+			
+			case 'country':
+				//getting the state list of given country
+				$states = $manageContent->getStateListOfCountry($_POST['country']);
+			
+			break;
+			
        	default:
             
             break;

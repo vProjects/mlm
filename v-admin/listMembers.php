@@ -49,6 +49,8 @@
                     <th>Order History</th>
                     <th>Withdraw History</th>
                     <th>Ewallet Details</th>
+                    <th>MLM Structure</th>
+                    <th>Add Money To EWallet</th>
                 </tr>
             </thead>
             

@@ -31,6 +31,15 @@
                     <input type="text" placeholder="" class="textbox1" name="email_id" id="v_email">
                 </div>
                 <div class="form-control v-form">
+                    <label class="control-label">DOB:</label>
+                    <input type="text" placeholder="" name="dob" id="calender_date" class="textbox1">
+                </div>
+                <div class="form-control v-form">
+                    <label class="control-label">Gender:</label>
+                    <input type="radio" name="gender" value="male" checked="checked"  style="margin-left:15px;"/> Male
+                    <input type="radio" name="gender" value="female" /> Female
+                </div>
+                <div class="form-control v-form">
                 	<label class="control-label">Contact No:</label>
                     <input type="text" placeholder="" class="textbox1" name="contact_no" id="v_contact_no">
                 </div>
@@ -52,12 +61,16 @@
                     <input type="text" placeholder="" class="textbox1" name="postal_code">
                 </div>
                 <div class="form-control v-form">
-                	<label class="control-label">Region/State:</label>
-                    <input type="text" placeholder="" class="textbox1" name="state">
+                	<label class="control-label">Country:</label>
+                    <select name="country_id" id="addMember_country" class="textbox1">
+                    	<?php $manageData->getCountryList('Slovenia'); ?>
+                    </select>
                 </div>
                 <div class="form-control v-form">
-                	<label class="control-label">Country:</label>
-                    <input type="text" placeholder="" class="textbox1" name="country">
+                	<label class="control-label">Region/State:</label>
+                    <select name="state_id" id="addMember_state" class="textbox1">
+						<?php $manageData->getStateList(''); ?>
+                    </select>
                 </div>
                 <h4 class="form_caption">Password</h4>
                 <div class="form-control v-form">

@@ -155,11 +155,11 @@
 		}
 		
 		//function for inserting member's details
-		function insertMember($name,$email_id,$contact_no,$address,$city,$postal_code,$state,$country,
+		function insertMember($name,$email_id,$dob,$gender,$contact_no,$address,$city,$postal_code,$state,$country,
 		$username,$password,$membership_id,$date,$expiration_date)
 		{
-			$query = $this->link->prepare("INSERT INTO `member_table`(`name`, `email_id`, `contact_no`,`address`, `city`, `postal_code`, `state`, `country`, `username`, `password`, `membership_id`, `date`, `expiration_date`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
-			$values = array($name,$email_id,$contact_no,$address,$city,$postal_code,$state,$country,$username,$password,$membership_id,$date,$expiration_date);
+			$query = $this->link->prepare("INSERT INTO `member_table`(`name`, `email_id`, `dob`, `gender`, `contact_no`,`address`, `city`, `postal_code`, `state`, `country`, `username`, `password`, `membership_id`, `date`, `expiration_date`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+			$values = array($name,$email_id,$dob,$gender,$contact_no,$address,$city,$postal_code,$state,$country,$username,$password,$membership_id,$date,$expiration_date);
 			$query->execute($values);
 			return $query->rowCount();
 		}
@@ -171,6 +171,26 @@
 			$query = $this->link->prepare("INSERT INTO `mlm_info`(`membership_id`, `date`) VALUES (?,?)");
 			$values = array($membership_id,$date);
 			$query->execute($values);
+			return $query->rowCount();
+		}
+		
+		/*method for inserting values to given table
+		//Auth Dipanjan  
+		*/
+		function insertValue($table_name,$column_name,$column_values){
+			//declaring variables for preparing the query
+			$column = "";
+			$value = "";
+			for($i=0;$i<count($column_name);$i++)
+			{
+				$column = $column."`".$column_name[$i]."`, ";
+				$value = $value."?,"; 
+			}
+			//modifying the string for column name and values
+			$column = substr($column,0,-2);
+			$value = substr($value,0,-1);
+			$query = $this->link->prepare("INSERT INTO `$table_name`($column) VALUES ($value)");
+			$query->execute($column_values);
 			return $query->rowCount();
 		}
 		
@@ -211,14 +231,50 @@
 		}
 		
 		/*
+		- method for getting the values using where and between limits
+		- auth: Dipanjan
+		*/
+		function getValueBetween($table_name,$value,$row_value,$value_first,$value_second)
+		{
+			$query = $this->link->query("SELECT $value from $table_name where $row_value BETWEEN '$value_first' AND '$value_second'");
+			$query->execute();
+			$rowcount = $query->rowCount();
+			if($rowcount > 0){
+				$result = $query->fetchAll(PDO::FETCH_ASSOC);
+				return $result;
+			}
+			else{
+				return $rowcount;
+			}
+		}
+		
+		/*
+		- method for getting the values using where and between limits in descending order
+		- auth: Dipanjan
+		*/
+		function getValueBetweenDescending($table_name,$value,$row_value,$value_first,$value_second)
+		{
+			$query = $this->link->query("SELECT $value from $table_name where $row_value BETWEEN '$value_first' AND '$value_second' ORDER BY `id` DESC");
+			$query->execute();
+			$rowcount = $query->rowCount();
+			if($rowcount > 0){
+				$result = $query->fetchAll(PDO::FETCH_ASSOC);
+				return $result;
+			}
+			else{
+				return $rowcount;
+			}
+		}
+		
+		/*
 		- method for inserting the product
 		- auth: Dipanjan
 		*/
-		function insertProduct($product_id,$category,$product_name,$description,$references,$old_price,$price_guest,$price_members,$discount,$stock,$date,$expiration_date,$maxpick,$status,$image,$image1,$image2,$image3,$image4)
+		function insertProduct($product_id,$category,$product_name,$description,$references,$old_price,$price_guest,$price_members,$tax,$discount,$stock,$date,$expiration_date,$maxpick,$status,$image,$image1,$image2,$image3,$image4)
 		{
-			$query = $this->link->prepare("INSERT INTO `product_table`(`product_id`, `category`, `product_name`, `product_description`, `references`, `old_price`, `price_guest`, `price_members`, `discount`, `stock`, `date`, `expiration_date`, `maxpick`, `status`, `image`, `image1`, `image2`, `image3`, `image4`)
-VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-			$values = array($product_id,$category,$product_name,$description,$references,$old_price,$price_guest,$price_members,$discount,$stock,$date,$expiration_date,$maxpick,$status,$image,$image1,$image2,$image3,$image4);
+			$query = $this->link->prepare("INSERT INTO `product_table`(`product_id`, `category`, `product_name`, `product_description`, `references`, `old_price`, `price_guest`, `price_members`, `tax`, `discount`, `stock`, `date`, `expiration_date`, `maxpick`, `status`, `image`, `image1`, `image2`, `image3`, `image4`)
+VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+			$values = array($product_id,$category,$product_name,$description,$references,$old_price,$price_guest,$price_members,$tax,$discount,$stock,$date,$expiration_date,$maxpick,$status,$image,$image1,$image2,$image3,$image4);
 			$query->execute($values);
 			return $query->rowCount();
 		}
@@ -227,11 +283,11 @@ VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 		- method for inserting the coupon
 		- auth: Dipanjan
 		*/
-		function insertCoupon($coupon_id,$category,$coupon_name,$description,$references,$coupon_code,$old_price,$price_guest,$price_members,$discount,$stock,$date,$expiration_date,$maxpick,$status,$image,$image1,$image2,$image3,$image4)
+		function insertCoupon($coupon_id,$category,$coupon_name,$description,$references,$coupon_code,$old_price,$price_guest,$price_members,$tax,$discount,$stock,$date,$expiration_date,$maxpick,$status,$image,$image1,$image2,$image3,$image4)
 		{
-			$query = $this->link->prepare("INSERT INTO `coupon_table`(`coupon_id`, `category`, `coupon_name`, `coupon_description`, `references`, `coupon_code`, `old_price`, `price_guest`, `price_members`, `discount`, `stock`, `date`, `expiration_date`, `maxpick`, `status`, `image`, `image1`, `image2`, `image3`, `image4`)
-VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-			$values = array($coupon_id,$category,$coupon_name,$description,$references,$coupon_code,$old_price,$price_guest,$price_members,$discount,$stock,$date,$expiration_date,$maxpick,$status,$image,$image1,$image2,$image3,$image4);
+			$query = $this->link->prepare("INSERT INTO `coupon_table`(`coupon_id`, `category`, `coupon_name`, `coupon_description`, `references`, `coupon_code`, `old_price`, `price_guest`, `price_members`, `tax`, `discount`, `stock`, `date`, `expiration_date`, `maxpick`, `status`, `image`, `image1`, `image2`, `image3`, `image4`)
+VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+			$values = array($coupon_id,$category,$coupon_name,$description,$references,$coupon_code,$old_price,$price_guest,$price_members,$tax,$discount,$stock,$date,$expiration_date,$maxpick,$status,$image,$image1,$image2,$image3,$image4);
 			$query->execute($values);
 			return $query->rowCount();
 		}
@@ -279,7 +335,14 @@ VALUES (?,?,?,?,?,?,?,?)");
 		*/
 		function deleteValue($table_name,$column_name,$column_value)
 		{
-			$queryString = "DELETE FROM $table_name WHERE $column_name =$column_value";
+			if(is_string($column_value))
+			{
+				$queryString = "DELETE FROM $table_name WHERE $column_name = '$column_value'";
+			}
+			else
+			{
+				$queryString = "DELETE FROM $table_name WHERE $column_name = $column_value";
+			}
 			$query = $this->link->prepare($queryString);
 			$query->execute();
 			$count = $query->rowCount();

@@ -60,12 +60,29 @@
             <button type="button" class="close" data-dismiss="alert">×</button>
             <h4 class="alert-heading">Ta stran uporablja piškotke za delo</h4>
             <p>Spletno stran MojLife uporablja t.i. piškotke za izboljšanje uporabniške izkušnje. Z obiskom in uporabo spletnega strani MojLife soglašate s piškotki...</p>
-            <button class="btn btn-success" data-dismiss="alert">Omogočajo</button>
+            <button class="btn btn-success" id="cookieAlertAccept" data-dismiss="alert">Omogočajo</button>
           </div>
     </div>
     <!-- footer ends here -->
 </div>
 <!-- body container ends here -->
+
+<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+<script type="text/javascript">
+	$(function() {
+	  $( "#calender_date" ).datepicker();
+	  $( "#calender_date" ).datepicker("option", "dateFormat","yy-mm-dd");
+	 });
+</script>
+
+<script type="text/javascript">
+  $( document ).ready(function() {
+   
+    $('#myCarousel').carousel({
+      interval: 3000
+    });
+  });
+</script>
 
 </body>
 </html>

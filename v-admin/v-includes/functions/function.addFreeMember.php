@@ -15,14 +15,16 @@
 		$firstname = $_POST['f_name'];
 		$lastname = $_POST['l_name'];
 		$email_id = $_POST['email_id'];
+		$dob = $_POST['dob'];
+		$gender = $_POST['gender'];
 		$contact_no = $_POST['contact_no'];
 		$Senior_id = $_POST['Senior_id'];
 		$address1 = $_POST['address1'];
 		$address2 = $_POST['address2'];
 		$city = $_POST['city'];
 		$postal_code = $_POST['postal_code'];
-		$state = $_POST['state'];
-		$country = $_POST['country'];
+		$state = $_POST['state_id'];
+		$country = $_POST['country_id'];
 		$password = $_POST['password'];
 	}
 	
@@ -42,7 +44,7 @@
 	$username = $email_id;
 	
 	//inserting values in member_table
-	$result = $manageData->insertMember($name,$email_id,$contact_no,$address,$city,$postal_code,$state,$country,$username,$password,$membership_id,$date,$expiration_date);
+	$result = $managedata->insertMember($name,$email_id,$dob,$gender,$contact_no,$address,$city,$postal_code,$state,$country,$username,$password,$membership_id,$date,$expiration_date);
 	
 	//inserting membership id in mlm_table
 	$result_mlm = $manageData->insertMembershipId($membership_id,$date);
@@ -76,7 +78,7 @@
 	$_SESSION['memberId'] = $membership_id;
 	$mail->getDataForRegistration($email_id,$membership_id);
 	//update membership activation field
-	$update_field = $manageData->updateValueWhere("member_table","membership_activation",1,"membership_id",$membership_id);
+	//$update_field = $manageData->updateValueWhere("member_table","membership_activation",1,"membership_id",$membership_id);
 		
 	header("Location: ../../addFreeMember.php");
 		

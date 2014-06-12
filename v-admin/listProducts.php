@@ -24,6 +24,7 @@
                     <th>Old Price</th>
                     <th>Guest Price</th>
                     <th>Members Price</th>
+                    <th>Tax</th>
                     <th>Discount</th>
                     <th>Stock</th>
                     <th>Expiration Date</th>
